@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Timetable | Paathshala</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/student_dashboard.css') }}">
+
+  <style>
+    .content-wrap{
+      padding: 20px;
+    }
+
+    .page-title{
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 5px;
+      color: #0f172a;
+    }
+
+    .page-sub{
+      color:#64748b;
+      margin-bottom: 20px;
+    }
+
+    .timetable-box{
+      background: white;
+      padding: 18px;
+      border-radius: 18px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.08);
+      margin-top: 10px;
+      overflow-x: auto;
+    }
+
+    table{
+      border-collapse: collapse;
+      width: 100%;
+      text-align: center;
+      min-width: 900px;
+    }
+
+    th{
+      background: #2563eb;
+      color: white;
+      padding: 14px;
+      font-size: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td{
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+
+    .time-slot{
+      font-weight: 800;
+      background: #f1f5f9;
+      font-size: 14px;
+      width: 140px;
+    }
+
+    .cell{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      align-items:center;
+      justify-content:center;
+      min-height: 58px;
+    }
+
+    .subject{
+      font-weight: 900;
+      color:#0f172a;
+      font-size: 14px;
+    }
+
+    .teacher{
+      color:#64748b;
+      font-size: 12px;
+    }
+
+    .empty{
+      color:#94a3b8;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ✅ Use your same student sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <h2 class="brand">Paathshala</h2>
+    <p class="sub">Student Panel</p>
+  </div>
+
+  <nav class="menu">
+    <a href="/student/dashboard" class="menu-link"><span class="icon">🏠</span> Dashboard</a>
+    <a href="/student/results" class="menu-link"><span class="icon">📊</span> Results</a>
+    <a href="/student/timetable" class="menu-link active"><span class="icon">🗓️</span> Timetable</a>
+     <a href="/attendance/student" class="menu-link">
+  <span class="icon">✅</span> Attendance
+</a>
+
+    <a href="/notes/view" class="menu-link"><span class="icon">📚</span> View Notes</a>
+    <a href="/student/profile" class="menu-link"><span class="icon">👤</span> Profile</a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <a href="/logout" class="logout-btn">🚪 Logout</a>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <h3>Hi, {{ student.name }} 👋</h3>
+    <div class="profile">
+      <img src="{{ url_for('static', filename='img/user.png') }}" alt="profile">
+    </div>
+  </div>
+
+  <div class="content-wrap">
+    <div class="page-title">🗓 My Timetable</div>
+    <div class="page-sub">Class: <b>{{ student_class }}</b></div>
+
+    <div class="timetable-box">
+      {% set days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"] %}
+
+{# ✅ Collect time slots dynamically from admin-saved slots #}
+{% set time_slots = slots | map(attribute='time_slot') | unique | list %}
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:150px;">Time Slot</th>
+            {% for d in days %}
+              <th>{{ d }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for t in time_slots %}
+          <tr>
+            <td class="time-slot">{{ t }}</td>
+
+            {% for d in days %}
+              {% set match = (slots | selectattr("day","equalto", d) | selectattr("time_slot","equalto", t) | list) %}
+              <td>
+                {% if match and match|length > 0 %}
+                  <div class="cell">
+                    <div class="subject">{{ match[0].subject }}</div>
+                    <div class="teacher">{{ match[0].faculty_name or "" }}</div>
+                  </div>
+                {% else %}
+                  <div class="cell">
+                    <div class="empty">—</div>
+                  </div>
+                {% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if not slots or slots|length == 0 %}
+        <p style="margin-top:12px; color:#64748b; text-align:center;">
+          No timetable uploaded for your class yet.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

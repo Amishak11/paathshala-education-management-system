@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Schedule - Student</title>
+   <link rel="stylesheet"  href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Student Panel</h2>
+
+    <a href="{{ url_for('student_bp.student_dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('attendance_bp.student_view_attendance') }}">Attendance</a>
+    <a href="{{ url_for('exam_bp.student_view_exams') }}">Exams</a>
+   <a href="{{ url_for('notes_bp.student_view_notes') }}">View Notes</a>
+
+    <a href="{{ url_for('feedback_bp.student_feedback_view') }}">Feedback</a>
+
+ <a href="/logout" class="logout">Logout</a>
+
+</div>
+
+
+<div class="content">
+    <h1>📘 Exam Schedule & Notices</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Notice</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if exams %}
+                {% for exam in exams %}
+                <tr>
+                    <td>{{ exam.subject }}</td>
+                    <td>{{ exam.exam_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ exam.description }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">No exams announced yet.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

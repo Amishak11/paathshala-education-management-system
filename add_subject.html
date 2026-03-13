@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Subject - Paathshala</title>
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('student_bp.add_student_view') }}">Add Student</a>
+    <a href="{{ url_for('faculty_bp.add_faculty_view') }}">Add Faculty</a>
+    <a href="{{ url_for('subject_bp.add_subject_view') }}">Add Subject</a>
+    <a href="{{ url_for('notes_bp.upload_notes_view') }}">Upload Notes</a>
+    <a href="{{ url_for('attendance_bp.manage_attendance') }}">Manage Attendance</a>
+    <a href="{{ url_for('exam_bp.add_exam_view') }}" class="active">Add Exam</a>
+    <a href="{{ url_for('fees_bp.manage_fees') }}">Manage Fees</a>
+    <a href="{{ url_for('feedback_bp.view_feedback') }}">View Feedback</a>
+    <a href="{{ url_for('appointment_bp.view_appointments') }}">View Appointments</a>
+    <a href="{{ url_for('student_bp.view_students') }}">View Students</a>
+
+   <a href="/logout" class="logout">Logout</a>
+
+</div>
+
+<div class="content">
+    <h1>Add Subject</h1>
+
+    <form id="subjectForm">
+        <input type="text" id="name" placeholder="Subject Name" required>
+
+        <button type="button" onclick="addSubject()">Add Subject</button>
+        <p id="msg"></p>
+    </form>
+</div>
+
+<script>
+function addSubject() {
+    let data = {
+        name: document.getElementById("name").value
+    };
+
+    fetch("http://localhost:5000/subject/add", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        document.getElementById("msg").innerHTML = res.message;
+    });
+}
+</script>
+
+</body>
+</html>

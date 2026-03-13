@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Students - Paathshala</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <style>
+        /* ✅ Class Filter Tabs Style */
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #64748b;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .filter-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .class-badge {
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="/admin/dashboard">🏠 Dashboard</a>
+    <a href="javascript:history.back()">⬅ Back</a>
+    <a href="/logout" class="logout">🚪 Logout</a>
+</div>
+
+<div class="content">
+    <h1>Students Directory</h1>
+    <p>Filter by class to manage specific student groups</p>
+
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterClass('All', this)">All Students</button>
+        <button class="filter-btn" onclick="filterClass('7th', this)">Class 7th</button>
+        <button class="filter-btn" onclick="filterClass('8th', this)">Class 8th</button>
+        <button class="filter-btn" onclick="filterClass('9th', this)">Class 9th</button>
+        <button class="filter-btn" onclick="filterClass('10th', this)">Class 10th</button>
+    </div>
+
+    <table id="studentsTable">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Class</th>
+                <th>School</th>
+                <th>Subjects</th>
+                <th>Email / Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+</div>
+
+<script>
+let allStudents = []; // Store data globally to filter without re-fetching
+
+function loadStudents() {
+    fetch("http://localhost:5000/student/all")
+    .then(res => res.json())
+    .then(data => {
+        allStudents = data;
+        renderTable(allStudents);
+    })
+    .catch(err => console.error("Error fetching students:", err));
+}
+
+function renderTable(data) {
+    const tbody = document.querySelector("#studentsTable tbody");
+    tbody.innerHTML = "";
+
+    if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">No students found for this class.</td></tr>`;
+        return;
+    }
+
+    data.forEach((s, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td style="font-weight:600;">${s.name}</td>
+                <td><span class="class-badge">${s.class}</span></td>
+                <td>${s.school}</td>
+                <td style="font-size: 13px; color: #64748b;">${s.subjects}</td>
+                <td>
+                    <div style="font-size: 13px;">${s.email}</div>
+                    <div style="font-size: 12px; color: #94a3b8;">${s.phone}</div>
+                </td>
+                <td>
+                    <button class="edit-btn" onclick="editStudent(${s.id})">Edit</button>
+                    <button class="delete-btn" onclick="deleteStudent(${s.id})">Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// ✅ Filter Logic
+function filterClass(className, btn) {
+    // 1. Handle Button Active State
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // 2. Filter Data
+    if (className === 'All') {
+        renderTable(allStudents);
+    } else {
+        const filtered = allStudents.filter(s => s.class === className);
+        renderTable(filtered);
+    }
+}
+
+function deleteStudent(id) {
+    if (!confirm("Are you sure you want to delete this student?")) return;
+
+    fetch(`http://localhost:5000/student/delete/${id}`, {
+        method: "DELETE"
+    })
+    .then(res => res.json())
+    .then(() => {
+        // Refresh global data after deletion
+        loadStudents();
+    });
+}
+
+function editStudent(id) {
+    window.location.href = `/student/edit/${id}`;
+}
+
+// Initial Load
+loadStudents();
+</script>
+
+</body>
+</html>

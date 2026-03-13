@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paathshala | About Us</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+
+  <style>
+    /* Make navbar content centered like rest */
+    .navbar .navbar-inner{
+      width: min(92%, 1100px);
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 18px;
+    }
+
+    /* ===== Dark Mode (About Page) ===== */
+    body.dark{
+      background: #0b1220;
+      color: #e5e7eb;
+    }
+
+    body.dark .announcement-bar{
+      background: #0f172a;
+      color: #e5e7eb;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    body.dark .navbar{
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    body.dark .nav-links a{
+      color: #e5e7eb;
+    }
+
+    body.dark .nav-links a:hover{
+      color: #93c5fd;
+    }
+
+    body.dark .brand-text{
+      color: #e5e7eb;
+    }
+
+    body.dark .theme-switch{
+      background: rgba(255,255,255,0.08);
+      color: #e5e7eb;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    body.dark .theme-switch:hover{
+      background: rgba(255,255,255,0.14);
+    }
+
+    /* About cards visibility */
+    body.dark .about-card{
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 0 18px rgba(0,0,0,0.35);
+    }
+
+    body.dark .about-card h2,
+    body.dark .about-card h3{
+      color: #e5e7eb;
+    }
+
+    body.dark .about-card p{
+      color: #cbd5e1;
+    }
+
+    /* Footer */
+    body.dark footer{
+      background: #0f172a;
+      color: #cbd5e1;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== ANNOUNCEMENT BAR ===== -->
+  <div class="announcement-bar">
+    <marquee>
+      🎉 <strong>Paathshala Now in Panvel!</strong> |
+      Admissions Open for <strong>6th–10th</strong> | Science <strong>11th & 12th</strong> |
+      <strong>1 Month FREE Demo Available</strong>
+    </marquee>
+  </div>
+
+  <!-- ===== NAVIGATION BAR ===== -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/Picture1.jpg.jpeg') }}"
+             alt="Paathshala Logo" class="brand-logo">
+        <div class="brand-text">Paathshala</div>
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/#contact">Contact</a></li>
+
+        <li>
+          <button class="theme-switch" type="button" onclick="toggleDarkMode()">
+            <span class="mode-icon">🌙</span>
+            <span class="mode-text">Mode</span>
+          </button>
+        </li>
+
+        <li><a href="/login" class="nav-btn">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== ABOUT WRAP ===== -->
+  <section class="about-wrap">
+
+    <!-- ===== BLOCK 1 (Founder) ===== -->
+    <div class="about-block">
+      <div class="about-photo">
+        <img src="{{ url_for('static', filename='images/saurabh_sir.jpeg') }}" alt="Founder">
+      </div>
+
+      <div class="about-card">
+        <h2>ABOUT US</h2>
+        <h3>Mr. Saurabh Sadh <span>(Founder)</span></h3>
+
+        <p>
+          Founder of Paathshala with a vision to provide quality education through conceptual clarity,
+          disciplined learning, and student-centric teaching.
+        </p>
+        <p>
+          With years of experience in teaching CBSE, ICSE, ISC, and State Board students,
+          the founder believes in building strong academic foundations.
+        </p>
+      </div>
+    </div>
+
+    <!-- ===== BLOCK 2 (Co-Founder) ===== -->
+    <div class="about-block reverse">
+      <div class="about-photo">
+        <img src="{{ url_for('static', filename='images/mahira_maam.jpeg') }}" alt="Co-Founder">
+      </div>
+
+      <div class="about-card">
+        <h2>ABOUT US</h2>
+        <h3>Mrs. Mahira Sadh <span>(Co-Founder)</span></h3>
+
+        <p>
+          The co-founder plays a key role in academic planning, student mentoring,
+          and ensuring quality teaching standards at Paathshala.
+        </p>
+        <p>
+          Passionate about education, innovation, and guiding students towards academic excellence.
+        </p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    © 2025 Paathshala | Designed for Academic Excellence
+  </footer>
+
+  <!-- ✅ Dark Mode JS (Working + Saves Preference) -->
+  <script>
+    // Apply saved theme on page load
+    (function() {
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark") document.body.classList.add("dark");
+      updateModeIcon();
+    })();
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark") ? "dark" : "light"
+      );
+      updateModeIcon();
+    }
+
+    function updateModeIcon() {
+      const icon = document.querySelector(".mode-icon");
+      if (!icon) return;
+      icon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+    }
+  </script>
+
+</body>
+</html>

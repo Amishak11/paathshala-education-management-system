@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Faculty - Paathshala</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty.css') }}">
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="/admin/dashboard">🏠 Dashboard</a>
+    <a href="javascript:history.back()">⬅ Back</a>
+    <a href="/logout" class="logout">🚪 Logout</a>
+</div>
+
+
+<!-- ================= CONTENT ================= -->
+<div class="content">
+    <h1>Faculty List</h1>
+    <p>Manage faculty details</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Subject</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Experience</th>
+                <th>Qualification</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="table"></tbody>
+    </table>
+</div>
+
+<script>
+fetch("/faculty/all")
+.then(res => res.json())
+.then(data => {
+    let t = document.getElementById("table");
+
+    data.forEach(f => {
+        t.innerHTML += `
+        <tr id="row-${f.id}">
+            <td><input value="${f.name}" id="name-${f.id}" disabled></td>
+            <td><input value="${f.subject}" id="subject-${f.id}" disabled></td>
+            <td><input value="${f.email}" id="email-${f.id}" disabled></td>
+            <td><input value="${f.phone}" id="phone-${f.id}" disabled></td>
+            <td><input value="${f.experience}" id="exp-${f.id}" disabled></td>
+            <td><input value="${f.qualification}" id="qual-${f.id}" disabled></td>
+          <td class="actions">
+    <button class="btn edit" onclick="enableEdit(${f.id})">Edit</button>
+    <button class="btn save" onclick="updateFaculty(${f.id})" id="save-${f.id}">Save</button>
+    <button class="btn cancel" onclick="cancelEdit()" id="cancel-${f.id}">Cancel</button>
+    <button class="btn delete" onclick="deleteFaculty(${f.id})">Delete</button>
+</td>
+
+
+
+        </tr>`;
+    });
+});
+
+function enableEdit(id) {
+    document.querySelectorAll(`#row-${id} input`).forEach(i => i.disabled = false);
+
+    document.getElementById(`save-${id}`).style.display = "inline-block";
+    document.getElementById(`cancel-${id}`).style.display = "inline-block";
+
+    document.querySelector(`#row-${id} .edit`).style.display = "none";
+    document.querySelector(`#row-${id} .delete`).style.display = "none";
+}
+
+function cancelEdit() {
+    location.reload();
+}
+
+
+function updateFaculty(id) {
+    fetch(`/faculty/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: document.getElementById(`name-${id}`).value,
+            email: document.getElementById(`email-${id}`).value,
+            phone: document.getElementById(`phone-${id}`).value,
+            experience: document.getElementById(`exp-${id}`).value,
+            qualification: document.getElementById(`qual-${id}`).value,
+            subject: document.getElementById(`subject-${id}`).value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        location.reload();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Update failed");
+    });
+}
+
+
+
+function deleteFaculty(id) {
+    if (!confirm("Delete this faculty?")) return;
+
+    fetch(`/faculty/delete/${id}`, { method: "DELETE" })
+    .then(() => {
+        alert("Faculty deleted");
+        location.reload();
+    });
+}
+</script>
+
+</body>
+</html>

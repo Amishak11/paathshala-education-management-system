@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Paathshala | Login</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+
+  <style>
+    body{
+      margin:0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e0ecff, #f8fafc);
+    }
+
+    /* ===== CENTER WRAPPER ===== */
+    .login-container{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    /* ===== LOGIN CARD ===== */
+    .login-card{
+      width:100%;
+      max-width:420px;
+      background:#fff;
+      border-radius:22px;
+      padding:30px 28px;
+      box-shadow:0 20px 40px rgba(0,0,0,0.12);
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(20px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* ===== TITLE ===== */
+    .login-title{
+      text-align:center;
+      font-size:26px;
+      font-weight:900;
+      color:#0f172a;
+      margin-bottom:6px;
+    }
+
+    .login-sub{
+      text-align:center;
+      font-size:14px;
+      color:#64748b;
+      margin-bottom:20px;
+    }
+
+    /* ===== INPUTS ===== */
+    label{
+      display:block;
+      margin-top:14px;
+      font-size:13px;
+      font-weight:800;
+      color:#0f172a;
+    }
+
+    input, select{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid #e2e8f0;
+      margin-top:6px;
+      font-size:14px;
+      outline:none;
+      transition:0.2s;
+      background:#f9fafb;
+    }
+
+    input:focus, select:focus{
+      border-color:#2563eb;
+      background:#fff;
+      box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+    }
+
+    /* ===== BUTTON ===== */
+    .login-btn{
+      width:100%;
+      margin-top:20px;
+      padding:13px;
+      border:none;
+      border-radius:999px;
+      background: linear-gradient(135deg,#2563eb,#1d4ed8);
+      color:#fff;
+      font-weight:900;
+      font-size:15px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .login-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 10px 20px rgba(37,99,235,0.3);
+    }
+
+    /* ===== ERROR ===== */
+    .error-box{
+      margin-top:14px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:#fee2e2;
+      color:#991b1b;
+      font-size:13px;
+      text-align:center;
+    }
+
+    /* ===== FOOT NOTE ===== */
+    .login-footer{
+      text-align:center;
+      margin-top:16px;
+      font-size:13px;
+      color:#64748b;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width:500px){
+      .login-card{ padding:22px; }
+      .login-title{ font-size:22px; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+  <div class="login-card">
+
+    <div class="login-title">Paathshala Login</div>
+    <div class="login-sub">Student • Faculty • Admin</div>
+
+    <form method="POST" action="/login">
+
+      <!-- ROLE -->
+      <label>Select Role</label>
+      <select name="role" required>
+        <option value="" disabled {% if not role %}selected{% endif %}>Choose role</option>
+        <option value="student" {% if role == "student" %}selected{% endif %}>Student</option>
+        <option value="faculty" {% if role == "faculty" %}selected{% endif %}>Faculty</option>
+        <option value="admin" {% if role == "admin" %}selected{% endif %}>Admin</option>
+      </select>
+
+      <!-- EMAIL -->
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Enter your email" required>
+
+      <!-- PASSWORD -->
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Enter password" required>
+
+      <!-- BUTTON -->
+      <button class="login-btn" type="submit">Login</button>
+
+      <!-- ERROR -->
+      {% if error %}
+        <div class="error-box">{{ error }}</div>
+      {% endif %}
+
+    </form>
+
+    <div class="login-footer">
+      © Paathshala Education System
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

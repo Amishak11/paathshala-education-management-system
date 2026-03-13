@@ -1,0 +1,214 @@
+
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Result | Admin</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+  <style>
+    body{ background:#f4f7fb; margin:0; font-family: Arial, sans-serif; }
+    .wrap{ max-width: 980px; margin: 28px auto; padding: 0 14px; }
+    .topbar{
+      display:flex; justify-content:space-between; align-items:center;
+      gap:12px; margin-bottom:16px;
+    }
+    .title{ font-size:22px; font-weight:900; color:#0f172a; margin:0; }
+    .card{
+      background:#fff; border:1px solid #eef2f7; border-radius:18px;
+      padding:18px; box-shadow:0 10px 28px rgba(15,23,42,0.06);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+    @media(max-width:800px){ .grid{ grid-template-columns:1fr; } }
+
+    label{ display:block; font-weight:800; font-size:13px; color:#334155; margin-bottom:6px; }
+    input, select{
+      width:100%; padding:10px 12px; border-radius:12px;
+      border:1px solid #cbd5e1; font-size:14px; background:#fff;
+    }
+    input:focus, select:focus{
+      outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.12);
+    }
+
+    .row3{
+      grid-column: 1 / -1;
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:14px;
+    }
+    @media(max-width:800px){ .row3{ grid-template-columns:1fr; } }
+
+    .absent-box{
+      display:flex; align-items:center; gap:10px; margin-top: 6px;
+      background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:10px 12px;
+    }
+    .absent-box input{ width:auto; box-shadow:none; }
+    .hint{ color:#64748b; font-size:12px; font-weight:700; margin-top:6px; }
+
+    .btn{
+      width:100%; margin-top:14px;
+      padding:12px 14px; border:none; border-radius:14px;
+      background:#2563eb; color:#fff; font-weight:900; cursor:pointer;
+    }
+    .btn:hover{ background:#1d4ed8; }
+
+    /* When absent, disable marks input */
+    .disabled{
+      opacity:.6;
+      pointer-events:none;
+    }
+  </style>
+</head>
+
+<body>
+
+      <!-- ✅ Sidebar (your same sidebar) -->
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}">🏠 Dashboard</a>
+    <a href="{{ url_for('admin_bp.view_results') }}">📄 View Results</a>
+    <a href="javascript:history.back()">⬅ Back</a>
+    <a href="/logout" class="logout">🚪 Logout</a>
+  </div>
+
+<div class="wrap">
+  <div class="topbar">
+    <h1 class="title">📊 Add Student Result</h1>
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}" style="font-weight:900; color:#2563eb; text-decoration:none;">← Dashboard</a>
+  </div>
+
+  <div class="card">
+    <form method="POST" action="{{ url_for('admin_bp.add_result') }}">
+
+      <div class="grid">
+
+        <!-- 1) Select Class -->
+        <div>
+          <label>Class</label>
+          <select name="class_name" id="classSelect" required>
+            <option value="">-- Select Class --</option>
+            <option value="7th">7th</option>
+            <option value="8th">8th</option>
+            <option value="9th">9th</option>
+            <option value="10th">10th</option>
+          </select>
+          <div class="hint">First pick class, then students will load.</div>
+        </div>
+
+        <!-- 2) Student list (will load based on class) -->
+        <div>
+          <label>Student</label>
+        <select name="student_name" id="studentSelect" required>
+            <option value="">-- Select Student --</option>
+          </select>
+          <div class="hint" id="studentHint">Choose a class to see students.</div>
+        </div>
+
+        <!-- 3) Subject + Exam Date + Total -->
+        <div class="row3">
+          <div>
+            <label>Subject</label>
+            <input type="text" name="subject" placeholder="e.g. Maths" required>
+          </div>
+
+          <div>
+            <label>Exam Date</label>
+            <input type="date" name="exam_date">
+          </div>
+
+          <div>
+            <label>Total Marks</label>
+            <input type="number" name="total_marks" min="1" placeholder="e.g. 100" required>
+          </div>
+        </div>
+
+        <!-- 4) Obtained Marks + Absent -->
+        <div>
+          <label>Obtained Marks</label>
+          <input type="number" name="obtained_marks" id="marksInput" min="0" placeholder="e.g. 85" required>
+          <div class="hint">If student was absent, tick Absent (marks auto set).</div>
+        </div>
+
+        <div>
+          <label>Attendance</label>
+          <div class="absent-box">
+            <input type="checkbox" id="absentCheck" name="is_absent" value="1">
+            <div>
+              <div style="font-weight:900; color:#0f172a;">Absent</div>
+              <div class="hint" style="margin:0;">If absent, marks will be saved as -1.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <button class="btn" type="submit">Add Result</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const classSelect = document.getElementById("classSelect");
+  const studentSelect = document.getElementById("studentSelect");
+  const studentHint = document.getElementById("studentHint");
+  const absentCheck = document.getElementById("absentCheck");
+  const marksInput = document.getElementById("marksInput");
+
+  // Absent toggle behaviour
+  function syncAbsentUI(){
+    if(absentCheck.checked){
+      marksInput.value = -1;
+      marksInput.classList.add("disabled");
+      marksInput.setAttribute("readonly", "readonly");
+    } else {
+      if(marksInput.value == -1) marksInput.value = "";
+      marksInput.classList.remove("disabled");
+      marksInput.removeAttribute("readonly");
+    }
+  }
+  absentCheck.addEventListener("change", syncAbsentUI);
+  syncAbsentUI();
+
+  // Load students when class changes
+  classSelect.addEventListener("change", async () => {
+    const cls = classSelect.value;
+    studentSelect.innerHTML = `<option value="">-- Select Student --</option>`;
+
+    if(!cls){
+      studentHint.textContent = "Choose a class to see students.";
+      return;
+    }
+
+    studentHint.textContent = "Loading students...";
+    try{
+      const res = await fetch(`/admin/students-by-class?class_name=${encodeURIComponent(cls)}`);
+      const data = await res.json();
+
+      if(!data.students || data.students.length === 0){
+        studentHint.textContent = "No students found in this class.";
+        return;
+      }
+
+      data.students.forEach(s => {
+  const opt = document.createElement("option");
+  opt.value = s.name;          
+  opt.textContent = s.name;    
+  studentSelect.appendChild(opt);
+});
+
+      studentHint.textContent = "Students loaded ✅";
+    } catch (e){
+      studentHint.textContent = "Failed to load students ❌";
+    }
+  });
+</script>
+
+</body>
+</html>

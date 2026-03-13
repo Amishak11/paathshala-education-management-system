@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Faculty Timetable</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty_timetable.css') }}">
+</head>
+
+<body>
+<div class="app">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="brand">Paathshala</div>
+    <nav class="menu">
+      <a class="menu-item" href="/faculty/dashboard">🏠 Dashboard</a>
+      <a class="menu-item active" href="/faculty/timetable">🗓️ Timetable</a>
+      <a class="menu-item" href="/faculty/attendance/history">✅ Attendance</a>
+      <a class="menu-item" href="/faculty/notes">📚 Notes</a>
+      <a class="menu-item" href="/logout">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+
+    <div class="topbar">
+      <div>
+        <h1>My Timetable</h1>
+        <p class="subtext">Faculty: <b>{{ faculty_name }}</b> • Take attendance directly from your lecture slot</p>
+      </div>
+      <div class="today">
+        <span>{{ date.today().strftime("%A, %d %b %Y") }}</span>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3>🗓️ Weekly Timetable</h3>
+        <a class="link-btn" href="/faculty/attendance/history">Attendance History →</a>
+      </div>
+
+      {% if not days or not time_slots %}
+        <div class="empty">
+          No timetable found for you yet. Ask Admin to assign your name in the timetable slots.
+        </div>
+      {% else %}
+        <div class="table-wrap">
+          <table class="tt-table">
+            <thead>
+              <tr>
+                <th class="sticky-col">Time Slot</th>
+                {% for d in days %}
+                  <th>{{ d }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for ts in time_slots %}
+              <tr>
+                <td class="sticky-col">{{ ts }}</td>
+
+                {% for d in days %}
+                  {% set slot = timetable.get((d, ts)) %}
+                  <td>
+                    {% if slot %}
+                      <div class="slot-box">
+                        <div class="chips">
+                          <span class="chip good">Class: {{ slot.class_name }}</span>
+                          <span class="chip">Subject: {{ slot.subject }}</span>
+                          <span class="chip">Lecture: {{ slot.lecture_no }}</span>
+                        </div>
+
+                        <a class="att-btn"
+   href="{{ url_for('faculty_bp.take_attendance_page',
+                    class_name=slot.class_name,
+                    day=d,
+                    time_slot=ts,
+                    subject=slot.subject,
+                    lecture_no=slot.lecture_no,
+                    att_date=slot.att_date.isoformat()) }}">
+  ✅ Take Attendance
+</a>
+                      </div>
+                    {% else %}
+                      <div class="slot-box empty-slot">
+                        <span class="chip">No Lecture</span>
+                      </div>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      {% endif %}
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

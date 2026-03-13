@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>Admin Panel</h2>
+  <a href="/results/view">📄 View Results</a>
+  <a href="/logout" class="logout">🚪 Logout</a>
+</div>
+
+<div class="content">
+  <h1 style="text-align:center;">✏ Edit Result</h1>
+
+  <div class="box-card" style="max-width:700px; margin:0 auto;">
+    <form method="POST">
+
+      <label>Student Name</label>
+      <input type="text" name="student_name" value="{{ r.student_name }}" required>
+
+      <label>Class</label>
+      <input type="text" name="class_name" value="{{ r.class_name }}" required>
+
+      <label>Subject</label>
+      <input type="text" name="subject" value="{{ r.subject }}" required>
+
+      <label>Exam Date</label>
+      <input type="date" name="exam_date" value="{{ r.exam_date }}">
+
+      <label>Total Marks</label>
+      <input type="number" name="total_marks" value="{{ r.total_marks or 0 }}" required>
+
+      <label>Obtained Marks</label>
+      <input type="number" name="obtained_marks" value="{{ r.obtained_marks }}" {% if r.obtained_marks == -1 %}disabled{% endif %}>
+
+      <div style="margin-top:10px;">
+        <input type="checkbox" name="is_absent" value="1" {% if r.obtained_marks == -1 %}checked{% endif %}>
+        <b>Absent</b>
+      </div>
+
+      <button type="submit" style="margin-top:12px;">✅ Update</button>
+
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

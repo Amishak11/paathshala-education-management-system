@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Faculty - Paathshala</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}">🏠 Dashboard</a>
+    <a href="{{ url_for('faculty_bp.view_faculty') }}">👨‍🏫 View Faculty</a>
+    <a href="javascript:history.back()">⬅ Back</a>
+    <a href="/logout" class="logout">🚪 Logout</a>
+</div>
+
+<div class="content">
+    <h1>Add New Faculty</h1>
+    <p>Register a new teacher and assign their primary subject.</p>
+
+    <form id="studentForm">
+        
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="e.g. Dr. John Doe" required>
+        </div>
+
+        <div class="form-group">
+            <label>Primary Subject</label>
+            <select id="subject" required>
+                <option value="">-- Select Subject --</option>
+                <option value="Maths">Maths</option>
+                <option value="Science">Science</option>
+                <option value="English">English</option>
+                <option value="Social Studies">Social Studies</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Sanskrit">Sanskrit</option>
+                <option value="Marathi">Marathi</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="faculty@paathshala.com" required>
+        </div>
+
+        <div class="form-group">
+            <label>Login Password</label>
+            <input type="password" id="password" placeholder="Set a secure password" required>
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" id="phone" placeholder="Contact number" required>
+        </div>
+
+        <div class="form-group">
+            <label>Years of Experience</label>
+            <input type="number" id="experience" placeholder="e.g. 5" min="0" required>
+        </div>
+
+        <div class="form-group full-width">
+            <label>Educational Qualification</label>
+            <input type="text" id="qualification" placeholder="e.g. M.Sc. B.Ed in Mathematics" required>
+        </div>
+
+        <button type="button" onclick="addFaculty()">🚀 Register Faculty</button>
+        <p id="msg"></p>
+    </form>
+</div>
+
+<script>
+function addFaculty() {
+    // Collect data from fields
+    let data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        subject: document.getElementById("subject").value,
+        phone: document.getElementById("phone").value,
+        experience: document.getElementById("experience").value,
+        qualification: document.getElementById("qualification").value
+    };
+
+    // Basic Validation
+    if (!data.name || !data.email || !data.subject) {
+        document.getElementById("msg").innerHTML = "<span style='color:red;'>Please fill all required fields.</span>";
+        return;
+    }
+
+    const btn = document.querySelector("button");
+    btn.innerText = "Processing...";
+    btn.disabled = true;
+
+    fetch("http://localhost:5000/faculty/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        const msgElement = document.getElementById("msg");
+        msgElement.innerHTML = `<span style="color:green;">${res.message}</span>`;
+        document.getElementById("studentForm").reset();
+        btn.innerText = "🚀 Register Faculty";
+        btn.disabled = false;
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("msg").innerHTML = "<span style='color:red;'>Error saving faculty data.</span>";
+        btn.innerText = "🚀 Register Faculty";
+        btn.disabled = false;
+    });
+}
+</script>
+
+</body>
+</html>

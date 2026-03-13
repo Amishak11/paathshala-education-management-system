@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Dashboard | Paathshala</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/student_dashboard.css') }}">
+
+  <!-- ✅ FullCalendar (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+  <style>
+    body{ background:#f4f7fb; }
+
+    /* ---------- TOP BAR ---------- */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:18px 24px;
+      background:#ffffff;
+      border-radius:18px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.06);
+      margin-bottom:22px;
+    }
+    .topbar h3{ font-size:20px; font-weight:900; color:#0f172a; }
+    .topbar h3 span{ font-size:14px; font-weight:700; color:#64748b; margin-left:6px; }
+    .topbar .profile{ display:none; }
+
+    /* ---------- STATS ---------- */
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:20px;
+      margin-bottom:25px;
+    }
+    .stat-card{
+      background:white;
+      border-radius:18px;
+      padding:22px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.06);
+      transition:0.3s;
+      text-decoration:none;
+      color:inherit;
+      display:block;
+    }
+    .stat-card:hover{ transform:translateY(-3px); }
+    .stat-card p{ font-size:14px; font-weight:800; color:#64748b; }
+    .stat-card h2{ font-size:30px; font-weight:900; color:#2563eb; margin:8px 0; }
+
+    /* ---------- MAIN CARDS ---------- */
+    .card{
+      background:white;
+      border-radius:20px;
+      padding:22px;
+      margin-bottom:25px;
+      box-shadow:0 12px 30px rgba(0,0,0,0.06);
+    }
+    .card h3{ font-size:18px; font-weight:900; color:#0f172a; margin-bottom:14px; }
+
+    /* ---------- NOTES ---------- */
+    .note-box{
+      background:#f8fafc;
+      border-radius:14px;
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .note-box b{ font-size:14px; font-weight:900; color:#0f172a; }
+    .note-box small{ font-size:12px; color:#64748b; }
+    .note-btn{
+      padding:8px 14px;
+      background:#2563eb;
+      color:white;
+      font-size:12px;
+      font-weight:900;
+      border-radius:12px;
+      text-decoration:none;
+      border:none;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      transition:.2s;
+    }
+    .note-btn:hover{ transform: translateY(-1px); opacity:.95; }
+
+    /* ==============================
+       ✅ TIMETABLE (DASHBOARD)
+       ============================== */
+    .content-wrap{ padding: 0; }
+
+    .page-title{
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      color: #0f172a;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .page-sub{
+      color:#64748b;
+      margin-bottom: 14px;
+      font-size: 13px;
+      font-weight:700;
+    }
+
+    .timetable-box{
+      background: white;
+      padding: 18px;
+      border-radius: 18px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.08);
+      margin-top: 10px;
+      overflow-x: auto;
+    }
+
+    table{
+      border-collapse: collapse;
+      width: 100%;
+      text-align: center;
+      min-width: 900px;
+    }
+
+    th{
+      background: #2563eb;
+      color: white;
+      padding: 14px;
+      font-size: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td{
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+
+    .time-slot{
+      font-weight: 800;
+      background: #f1f5f9;
+      font-size: 14px;
+      width: 140px;
+    }
+
+    .cell{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      align-items:center;
+      justify-content:center;
+      min-height: 58px;
+    }
+
+    .subject{
+      font-weight: 900;
+      color:#0f172a;
+      font-size: 14px;
+    }
+
+    .teacher{
+      color:#64748b;
+      font-size: 12px;
+      font-weight:700;
+    }
+
+    .empty{
+      color:#94a3b8;
+      font-size: 12px;
+      font-weight:800;
+    }
+
+    /* ==============================
+       ✅ AI CARD (NEW)
+       ============================== */
+    .ai-wrap{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      margin-top: 10px;
+    }
+    .ai-box{
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:16px;
+      padding:14px;
+    }
+    .ai-box h4{
+      margin:0 0 10px 0;
+      font-size:14px;
+      font-weight:950;
+      color:#0f172a;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .ai-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:10px;
+    }
+    .ai-select{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid #e2e8f0;
+      font-weight:900;
+      color:#0f172a;
+      background:#fff;
+      outline:none;
+    }
+    .ai-textarea{
+      width:100%;
+      margin-top:8px;
+      min-height:100px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid #e2e8f0;
+      outline:none;
+      font-weight:700;
+      color:#0f172a;
+      background:#fff;
+      resize: vertical;
+    }
+    .ai-status-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:10px;
+      gap:10px;
+    }
+    .ai-status{
+      color:#64748b;
+      font-weight:800;
+      font-size:12px;
+    }
+    .ai-output{
+      margin-top:10px;
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:14px;
+      padding:14px;
+      color:#0f172a;
+      line-height:1.65;
+      min-height:120px;
+      white-space:pre-wrap;
+      font-family:inherit;
+    }
+
+    /* ==============================
+       ✅ CUTE MINI CALENDAR (LIKE IMAGE)
+       ============================== */
+    #fullCalendar{
+      width: 380px;
+      max-width: 100%;
+      background:#fff;
+      border-radius:22px;
+      padding:18px 18px 12px 18px;
+      border:1px solid #eef2f7;
+      box-shadow:0 12px 30px rgba(0,0,0,0.06);
+      overflow:hidden;
+    }
+
+    #fullCalendar table{
+      min-width: 0 !important;
+      border-collapse: separate !important;
+    }
+
+    #fullCalendar .fc-theme-standard td,
+    #fullCalendar .fc-theme-standard th{
+      border: none !important;
+    }
+
+    #fullCalendar .fc-header-toolbar{
+      margin: 0 0 10px 0 !important;
+      padding: 0 !important;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    #fullCalendar .fc-toolbar-title{
+      font-size: 20px !important;
+      font-weight: 900 !important;
+      color:#0f172a !important;
+      letter-spacing: .2px;
+    }
+
+    #fullCalendar .fc-button{
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 6px 10px !important;
+      border-radius: 12px !important;
+      color:#94a3b8 !important;
+      font-weight: 900 !important;
+      line-height: 1 !important;
+    }
+    #fullCalendar .fc-button:hover{
+      background:#f1f5f9 !important;
+      color:#0f172a !important;
+    }
+    #fullCalendar .fc-today-button{ display:none !important; }
+
+    #fullCalendar .fc-col-header-cell-cushion{
+      font-size: 12px !important;
+      font-weight: 900 !important;
+      color:#94a3b8 !important;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      padding: 10px 0 8px 0 !important;
+    }
+
+    #fullCalendar .fc-daygrid-day-frame{
+      min-height: 44px !important;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    #fullCalendar .fc-daygrid-day-top{
+      justify-content:center !important;
+      width: 100%;
+    }
+
+    #fullCalendar .fc-daygrid-day-number{
+      width: 40px;
+      height: 40px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      color:#0f172a;
+      margin: 0 auto;
+    }
+
+    #fullCalendar .fc-day-other .fc-daygrid-day-number{
+      color:#cbd5e1 !important;
+      opacity: .7;
+    }
+
+    #fullCalendar .fc-day-today{
+      background: transparent !important;
+    }
+    #fullCalendar .fc-day-today .fc-daygrid-day-number{
+      background: #f97316 !important;
+      color: #fff !important;
+      box-shadow: 0 10px 20px rgba(249,115,22,.25);
+    }
+
+    #fullCalendar .fc a{
+      text-decoration:none !important;
+      color:inherit !important;
+    }
+
+    /* ==============================
+       ✅ DIGITAL LIST
+       ============================== */
+    .digital-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 14px;
+      border:1px solid #e2e8f0;
+      border-radius:14px;
+      background:#fff;
+    }
+    .digital-title{ font-weight:900; color:#0f172a; }
+    .digital-sub{ font-size:12px; color:#64748b; margin-top:3px; }
+    .tag{
+      font-weight:900;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+    }
+    .tag.notice{ background:#dcfce7; color:#16a34a; }
+    .tag.exam{ background:#f3e8ff; color:#7c3aed; }
+
+    /* Responsive for AI card */
+    @media(max-width: 900px){
+      .ai-wrap{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <h2 class="brand">Paathshala</h2>
+      <p class="sub">Student Panel</p>
+    </div>
+
+    <nav class="menu">
+      <a href="/student/dashboard" class="menu-link active"><span class="icon">🏠</span> Dashboard</a>
+      <a href="/student/results" class="menu-link"><span class="icon">📊</span> Results</a>
+      <a href="/attendance/student" class="menu-link"><span class="icon">✅</span> Attendance</a>
+      <a href="{{ url_for('notes_bp.student_view_notes') }}" class="menu-link"><span class="icon">📚</span> View Notes</a>
+      <a href="/announcement/student" class="menu-link"><span class="icon">📢</span> Announcements</a>
+      <a href="/student/profile" class="menu-link"><span class="icon">👤</span> Profile</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <a href="/logout" class="logout-btn">🚪 Logout</a>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main">
+
+    <div class="topbar">
+      <h3>Hi, {{ student.name }} 👋 <span>(Class {{ student.student_class }})</span></h3>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <p>Attendance</p>
+        <div class="attendance-circle" id="attendanceCircle" style="--percent: 0;">
+          <h2 id="attendancePercent">0%</h2>
+        </div>
+        <small><span id="presentLectures">0</span> / <span id="totalLectures">0</span> Lectures Present</small>
+      </div>
+
+      <a href="/announcement/student" class="stat-card link-card">
+        <p>Announcements</p>
+        <h2 id="announcementCount">0</h2>
+        <small>See all updates & notices</small>
+      </a>
+
+      <a href="{{ url_for('notes_bp.student_view_notes') }}" class="stat-card link-card">
+        <p>Library Notes</p>
+        <h2 id="notesCount">3</h2>
+        <small>Only Notes for Your Class</small>
+        <div id="notesBySubject" style="margin-top:10px;font-size:12px;color:#64748b;line-height:1.5;"></div>
+      </a>
+    </div>
+
+    <!-- ✅ TIMETABLE INSIDE DASHBOARD -->
+    <div class="card">
+      <div class="content-wrap">
+        <div class="page-title">🗓 My Timetable</div>
+        <div class="page-sub">Class: <b>{{ student_class }}</b></div>
+
+        <div class="timetable-box">
+          {% set all_days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"] %}
+          {% set show_days = days if days and days|length > 0 else all_days %}
+
+          <table>
+            <thead>
+              <tr>
+                <th style="width:150px;">Time Slot</th>
+                {% for d in show_days %}
+                  <th>{{ d }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for t in time_slots %}
+              <tr>
+                <td class="time-slot">{{ t }}</td>
+
+                {% for d in show_days %}
+                  {% set cell = timetable.get((d, t)) %}
+                  <td>
+                    {% if cell %}
+                      <div class="cell">
+                        <div class="subject">{{ cell.subject }}</div>
+                        <div class="teacher">{{ cell.faculty }}</div>
+                      </div>
+                    {% else %}
+                      <div class="cell">
+                        <div class="empty">—</div>
+                      </div>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          {% if not time_slots or time_slots|length == 0 %}
+            <p style="margin-top:12px; color:#64748b; text-align:center;">
+              No timetable uploaded for your class yet.
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ NEW: AI STUDY HELPER (REPLACED PROGRESS OVERVIEW) -->
+    <div class="card">
+      <h3>🤖 Paathshala AI Study Helper</h3>
+      <p style="margin-top:-6px;color:#64748b;font-size:13px;">
+        Ask doubts or paste notes — get explanations, quizzes, summary, flashcards & MCQs.
+      </p>
+
+      <div class="ai-wrap">
+
+        <!-- ⭐ ASK AI -->
+        <div class="ai-box">
+          <h4>⭐ Ask Paathshala AI</h4>
+
+          <div class="ai-row">
+            <select id="aiSubject" class="ai-select">
+              <option value="General">General</option>
+              <option value="Math">Math</option>
+              <option value="Science">Science</option>
+              <option value="English">English</option>
+              <option value="History">History</option>
+            </select>
+
+            <button id="btnExplain" class="note-btn">Explain</button>
+            <button id="btnEasy" class="note-btn" style="background:#7c3aed;">Make Easy</button>
+            <button id="btnQuiz" class="note-btn" style="background:#0ea5e9;">Give Quiz</button>
+          </div>
+
+          <textarea id="aiQuestion" class="ai-textarea"
+            placeholder="Type your doubt here... (Example: Explain photosynthesis in simple words)"></textarea>
+
+          <div class="ai-status-row">
+            <small id="aiStatus" class="ai-status">Ready ✅</small>
+            <button id="btnCopy1" class="note-btn" style="background:#111827;">Copy</button>
+          </div>
+
+          <div id="aiAnswer" class="ai-output">Your AI answer will appear here...</div>
+        </div>
+
+        <!-- 📝 NOTES TOOL -->
+        <div class="ai-box">
+          <h4>📝 Notes → Summary + Flashcards + MCQs</h4>
+
+          <div class="ai-row">
+            <button id="btnSummary" class="note-btn">Summary</button>
+            <button id="btnFlashcards" class="note-btn" style="background:#7c3aed;">Flashcards</button>
+            <button id="btnMCQ" class="note-btn" style="background:#0ea5e9;">5 MCQs</button>
+          </div>
+
+          <textarea id="notesText" class="ai-textarea" style="min-height:130px;"
+            placeholder="Paste your notes here..."></textarea>
+
+          <div class="ai-status-row">
+            <small id="notesStatus" class="ai-status">Ready ✅</small>
+            <button id="btnCopy2" class="note-btn" style="background:#111827;">Copy</button>
+          </div>
+
+          <div id="notesOutput" class="ai-output">Output will appear here...</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ✅ Calendar + Digital list -->
+    <div class="card">
+      <h3>📅 Announcement & Exam Calendar</h3>
+
+      <div style="display:flex; gap:18px; flex-wrap:wrap;">
+        <div id="fullCalendar"></div>
+
+        <div style="flex:1; min-width:280px;">
+          <h3 style="margin:0 0 10px 0;">🗓️ Digital Calendar (Upcoming)</h3>
+          <div id="digitalCalendar" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+      </div>
+
+      <div id="calendarError" class="dash-error"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // ---------- AI Helper ----------
+    async function callAI(feature, subject, text, statusEl, outputEl){
+      statusEl.textContent = "Thinking... 🤖";
+      outputEl.textContent = "Please wait...";
+      try{
+        const res = await fetch("/student/ai", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({ feature, subject, text })
+        });
+
+        const data = await res.json();
+
+        if(!data.ok){
+          statusEl.textContent = "Error ❌";
+          outputEl.textContent = data.error || "Something went wrong";
+          return;
+        }
+
+        statusEl.textContent = "Done ✅";
+        outputEl.textContent = data.result || "";
+      }catch(err){
+        statusEl.textContent = "Error ❌";
+        outputEl.textContent = err.message;
+      }
+    }
+
+    function copyText(el){
+      const txt = el.textContent || "";
+      navigator.clipboard.writeText(txt);
+    }
+
+    // Bind AI UI
+    const aiSubject = document.getElementById("aiSubject");
+    const aiQuestion = document.getElementById("aiQuestion");
+    const aiStatus = document.getElementById("aiStatus");
+    const aiAnswer = document.getElementById("aiAnswer");
+
+    document.getElementById("btnExplain").addEventListener("click", ()=>{
+      const q = aiQuestion.value.trim();
+      if(!q){ aiStatus.textContent="Type a doubt first ❌"; aiAnswer.textContent=""; return; }
+      callAI("explain", aiSubject.value, q, aiStatus, aiAnswer);
+    });
+
+    document.getElementById("btnEasy").addEventListener("click", ()=>{
+      const q = aiQuestion.value.trim();
+      if(!q){ aiStatus.textContent="Type a doubt first ❌"; aiAnswer.textContent=""; return; }
+      callAI("easy", aiSubject.value, q, aiStatus, aiAnswer);
+    });
+
+    document.getElementById("btnQuiz").addEventListener("click", ()=>{
+      const q = aiQuestion.value.trim();
+      if(!q){ aiStatus.textContent="Type a topic first ❌"; aiAnswer.textContent=""; return; }
+      callAI("quiz", aiSubject.value, q, aiStatus, aiAnswer);
+    });
+
+    document.getElementById("btnCopy1").addEventListener("click", ()=>{
+      copyText(aiAnswer);
+      aiStatus.textContent = "Copied ✅";
+      setTimeout(()=> aiStatus.textContent = "Ready ✅", 900);
+    });
+
+    const notesText = document.getElementById("notesText");
+    const notesStatus = document.getElementById("notesStatus");
+    const notesOutput = document.getElementById("notesOutput");
+
+    document.getElementById("btnSummary").addEventListener("click", ()=>{
+      const t = notesText.value.trim();
+      if(!t){ notesStatus.textContent="Paste notes first ❌"; notesOutput.textContent=""; return; }
+      callAI("summary", aiSubject.value, t, notesStatus, notesOutput);
+    });
+
+    document.getElementById("btnFlashcards").addEventListener("click", ()=>{
+      const t = notesText.value.trim();
+      if(!t){ notesStatus.textContent="Paste notes first ❌"; notesOutput.textContent=""; return; }
+      callAI("flashcards", aiSubject.value, t, notesStatus, notesOutput);
+    });
+
+    document.getElementById("btnMCQ").addEventListener("click", ()=>{
+      const t = notesText.value.trim();
+      if(!t){ notesStatus.textContent="Paste notes first ❌"; notesOutput.textContent=""; return; }
+      callAI("mcq", aiSubject.value, t, notesStatus, notesOutput);
+    });
+
+    document.getElementById("btnCopy2").addEventListener("click", ()=>{
+      copyText(notesOutput);
+      notesStatus.textContent = "Copied ✅";
+      setTimeout(()=> notesStatus.textContent = "Ready ✅", 900);
+    });
+
+    // ---------- Dashboard Data + Calendar ----------
+    document.addEventListener("DOMContentLoaded", async function () {
+      const errorBox = document.getElementById("calendarError");
+      const apiUrl = window.location.pathname.replace(/\/$/, "") + "/data";
+
+      let data;
+      try {
+        const res = await fetch(apiUrl, { credentials: "same-origin" });
+        data = await res.json();
+      } catch (err) {
+        errorBox.style.display = "block";
+        errorBox.innerHTML = "❌ Dashboard API failed: " + err.message;
+        return;
+      }
+
+      if (!data || data.error) {
+        errorBox.style.display = "block";
+        errorBox.innerHTML = "❌ Dashboard API error: " + (data?.error || "unknown");
+        return;
+      }
+
+      // ✅ Fill stats
+      const attendancePercent = data.attendance_percent ?? 0;
+      const present = data.present_lectures ?? 0;
+      const total = data.total_lectures ?? 0;
+
+      document.getElementById("attendancePercent").textContent = `${attendancePercent}%`;
+      document.getElementById("presentLectures").textContent = present;
+      document.getElementById("totalLectures").textContent = total;
+      document.getElementById("attendanceCircle").style.setProperty("--percent", attendancePercent);
+
+      document.getElementById("announcementCount").textContent = data.announcement_count ?? 0;
+      document.getElementById("notesCount").textContent = data.notes_count ?? 0;
+
+      // ✅ Notes by subject
+      const box = document.getElementById("notesBySubject");
+      const map = data.notes_by_subject || {};
+      const entries = Object.entries(map);
+
+      box.innerHTML = entries.length === 0
+        ? ""
+        : entries.sort((a,b) => b[1] - a[1])
+            .map(([sub, count]) => `• ${sub}: <b>${count}</b>`)
+            .join("<br>");
+
+      // ✅ Calendar events
+      const calendarEvents = Array.isArray(data.calendar_events) ? data.calendar_events : [];
+
+      // ✅ Digital list
+      const dc = document.getElementById("digitalCalendar");
+      function formatDate(iso) {
+        const d = new Date(iso);
+        if (isNaN(d)) return iso;
+        return d.toLocaleDateString(undefined, { weekday:"short", day:"2-digit", month:"short", year:"numeric" });
+      }
+
+      const upcoming = calendarEvents
+        .filter(ev => ev.date)
+        .map(ev => ({ ...ev, _dateObj: new Date(ev.date) }))
+        .filter(ev => !isNaN(ev._dateObj))
+        .sort((a,b) => a._dateObj - b._dateObj)
+        .slice(0, 8);
+
+      dc.innerHTML = upcoming.length === 0
+        ? `<div style="padding:12px;border:1px solid #e2e8f0;border-radius:14px;background:#fff;color:#64748b;">
+            No upcoming announcements/exams.
+          </div>`
+        : upcoming.map(ev => {
+            const type = (ev.type || "notice").toLowerCase();
+            const tagClass = type === "exam" ? "exam" : "notice";
+            const tagText = type === "exam" ? "EXAM" : "NOTICE";
+
+            return `
+              <div class="digital-item">
+                <div>
+                  <div class="digital-title">${ev.title || "Event"}</div>
+                  <div class="digital-sub">${formatDate(ev.date)} • ${(ev.type || "notice").toUpperCase()}</div>
+                </div>
+                <div class="tag ${tagClass}">${tagText}</div>
+              </div>
+            `;
+          }).join("");
+
+      // ✅ FullCalendar
+      const calendarEl = document.getElementById("fullCalendar");
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        height: "auto",
+        fixedWeekCount: false,
+        showNonCurrentDates: true,
+        firstDay: 1,
+
+        headerToolbar: { left: "title", center: "", right: "prev,next" },
+        titleFormat: { year: "numeric", month: "long" },
+        dayHeaderFormat: { weekday: "short" },
+
+        displayEventTime: false,
+        eventDisplay: "block",
+        dayMaxEvents: false,
+        eventContent: function() { return { html: "" }; },
+
+        events: calendarEvents
+          .filter(ev => ev.date)
+          .map(ev => ({
+            title: ev.title || "Event",
+            start: ev.date,
+            allDay: true
+          }))
+      });
+
+      calendar.render();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Profile | Paathshala</title>
+
+  <!-- ✅ SAME CSS AS DASHBOARD -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/student_dashboard.css') }}">
+
+  <style>
+    .profile-wrap{ padding: 22px; }
+
+    .page-title{
+      font-size: 24px;
+      font-weight: 900;
+      color:#0f172a;
+      margin-bottom: 14px;
+    }
+
+    .profile-card{
+      background:#fff;
+      border: 1px solid #eef2ff;
+      border-radius: 18px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    .profile-header{
+      display:flex;
+      align-items:center;
+      gap: 14px;
+      padding: 18px;
+      background: #f1f5ff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .avatar{
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(37,99,235,0.12);
+      font-size: 24px;
+      font-weight: 900;
+      color:#1d4ed8;
+      flex-shrink: 0;
+    }
+
+    .ph-name{
+      font-weight: 900;
+      font-size: 18px;
+      color:#0f172a;
+      margin: 0;
+    }
+
+    .ph-sub{
+      margin: 2px 0 0;
+      color:#64748b;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .profile-table{
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .profile-table th, .profile-table td{
+      padding: 14px 16px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .profile-table th{
+      width: 220px;
+      color:#64748b;
+      font-weight: 900;
+      background: #fbfdff;
+    }
+
+    .profile-table td{
+      color:#0f172a;
+      font-weight: 700;
+    }
+
+    .chip{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: rgba(37,99,235,0.10);
+      color:#1d4ed8;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px){
+      .profile-table th{ width: 140px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR (SAME AS DASHBOARD) ================= -->
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <h2 class="brand">Paathshala</h2>
+    <p class="sub">Student Panel</p>
+  </div>
+
+  <nav class="menu">
+    <a href="/student/dashboard" class="menu-link">
+      <span class="icon">🏠</span> Dashboard
+    </a>
+
+    <a href="/student/results" class="menu-link">
+      <span class="icon">📊</span> Results
+    </a>
+
+    <a href="/student/timetable" class="menu-link">
+      <span class="icon">🗓️</span> Timetable
+    </a>
+
+    <a href="/attendance/student" class="menu-link">
+      <span class="icon">✅</span> Attendance
+    </a>
+
+    <a href="{{ url_for('notes_bp.student_view_notes') }}" class="menu-link">
+      <span class="icon">📚</span> View Notes
+    </a>
+
+    <a href="/announcement/student" class="menu-link">
+      <span class="icon">📢</span> Announcements
+    </a>
+
+    <a href="/student/profile" class="menu-link">
+      <span class="icon">👤</span> Profile
+    </a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <a href="/logout" class="logout-btn">🚪 Logout</a>
+  </div>
+</aside>
+
+<!-- ✅ Auto active highlight -->
+<script>
+  (function () {
+    const current = window.location.pathname.replace(/\/$/, "");
+    document.querySelectorAll(".menu-link").forEach(a => {
+      const href = (a.getAttribute("href") || "").replace(/\/$/, "");
+      if (href === current) a.classList.add("active");
+    });
+  })();
+</script>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+  <div class="topbar">
+    <h3>Hi, {{ student.name }} 👋</h3>
+    <a href="/student/profile" class="menu-link">
+      <span class="icon">👤</span> Profile
+    </a>
+  </div>
+
+  <div class="profile-wrap">
+    <div class="page-title">👤 My Profile</div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar">👤</div>
+        <div>
+          <p class="ph-name">{{ student.name }}</p>
+          <p class="ph-sub">Class <span class="chip">{{ student.student_class }}</span></p>
+        </div>
+      </div>
+
+      <table class="profile-table">
+        <tr><th>Name</th><td>{{ student.name }}</td></tr>
+        <tr><th>Email</th><td>{{ student.email }}</td></tr>
+        <tr><th>Class</th><td>{{ student.student_class }}</td></tr>
+        <tr><th>School</th><td>{{ student.school }}</td></tr>
+        <tr><th>Phone</th><td>{{ student.phone }}</td></tr>
+        <tr><th>Subjects</th><td>{{ student.subjects }}</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

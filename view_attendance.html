@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Faculty Attendance - Paathshala</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <style>
+        .filter-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .filter-bar input {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+        }
+        .yes {
+            color: #16a34a;
+            font-weight: bold;
+            background: #f0fdf4;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .no {
+            color: #dc2626;
+            font-weight: bold;
+            background: #fef2f2;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}">🏠 Dashboard</a>
+    <a href="{{ url_for('attendance_bp.manage_attendance') }}">📅 Mark Attendance</a>
+    <a href="{{ url_for('attendance_bp.view_attendance_page') }}" class="active">📄 View Attendance</a>
+    <a href="javascript:history.back()">⬅ Back</a>
+    <a href="/logout" class="logout">🚪 Logout</a>
+</div>
+
+<div class="content">
+    <h1>Faculty Attendance Records</h1>
+    <p>Search and review faculty attendance logs by date.</p>
+
+    <div class="filter-bar">
+        <div>
+            <label style="font-weight: 600; color: #475569;">Select Date: </label>
+            <input type="date" id="date">
+        </div>
+        <button class="btn-link" onclick="loadAttendance()" style="margin:0; padding: 11px 25px;">
+            🔍 Search Records
+        </button>
+    </div>
+
+    <table id="attendanceTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Faculty Name</th>
+                <th>Phone</th>
+                <th>Present</th>
+                <th>Absent</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="attendanceData"></tbody>
+    </table>
+
+    <div id="noDataMsg" style="text-align: center; margin-top: 50px; color: #94a3b8;">
+        <p>Select a date and click search to view records.</p>
+    </div>
+</div>
+
+<script>
+document.getElementById("date").value = new Date().toISOString().split("T")[0];
+
+function loadAttendance() {
+    let date = document.getElementById("date").value;
+    const table = document.getElementById("attendanceTable");
+    const noDataMsg = document.getElementById("noDataMsg");
+
+    if (!date) {
+        alert("Please select a date first.");
+        return;
+    }
+
+    fetch("/attendance/records", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ type: "faculty", date: date })
+    })
+    .then(res => res.json())
+    .then(data => {
+        let rows = "";
+
+        if (!data || data.length === 0) {
+            noDataMsg.innerHTML = `<span style="color: #dc2626;">No records found for ${date} ❌</span>`;
+            noDataMsg.style.display = "block";
+            table.style.display = "none";
+            return;
+        }
+
+        noDataMsg.style.display = "none";
+        table.style.display = "table";
+
+        data.forEach(r => {
+            const present = r.status === "Present";
+            rows += `
+                <tr>
+                    <td style="font-weight: 600;">${r.name}</td>
+                    <td>${r.phone}</td>
+                    <td>${present ? '<span class="yes">Yes</span>' : '<span class="no">No</span>'}</td>
+                    <td>${present ? '<span class="no">No</span>' : '<span class="yes">Yes</span>'}</td>
+                    <td style="color: #64748b; font-size: 13px;">${r.created_at || ""}</td>
+                </tr>
+            `;
+        });
+
+        document.getElementById("attendanceData").innerHTML = rows;
+    })
+    .catch(err => {
+        console.error("Fetch error:", err);
+        alert("Error loading records. Please check the console.");
+    });
+}
+</script>
+
+</body>
+</html>

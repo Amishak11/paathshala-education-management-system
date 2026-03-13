@@ -1,0 +1,11 @@
+.student-notes .folders {
+    display: flex;
+    gap: 15px;
+}
+
+.note-card {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}

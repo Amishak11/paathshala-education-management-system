@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ title }} | Paathshala</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+<style>
+     /* Make navbar content centered like rest */
+    .navbar .navbar-inner{
+      width: min(92%, 1100px);
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 18px;
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- ===== NAVIGATION BAR ===== -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/Picture1.jpg.jpeg') }}"
+             alt="Paathshala Logo" class="brand-logo">
+        <div class="brand-text">Paathshala</div>
+      </div>
+
+      <ul class="nav-links">
+         <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+       <li><a href="#contact">Contact</a></li>
+
+        <li>
+          <button class="theme-switch" type="button" onclick="toggleDarkMode()">
+            <span class="mode-icon">🌙</span>
+            <span class="mode-text">Mode</span>
+          </button>
+        </li>
+
+        <li><a href="/login" class="nav-btn">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+<section class="gallery-page">
+  <div class="gallery-head">
+    <h1>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+  </div>
+
+  <div class="gallery-grid">
+    {% for img in images %}
+      <a href="{{ url_for('static', filename=img) }}" target="_blank" class="gallery-item">
+        <img src="{{ url_for('static', filename=img) }}" alt="{{ title }} photo {{ loop.index }}">
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="gallery-back">
+    <a href="/" class="back-btn">← Back to Home</a>
+  </div>
+</section>
+
+<footer>
+  © 2025 Paathshala | Designed for Academic Excellence
+</footer>
+
+</body>
+</html>

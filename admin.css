@@ -1,0 +1,1151 @@
+/* ===============================
+   ADMIN LAYOUT
+================================ */
+body {
+    display: flex;
+    min-height: 100vh;
+    background: #f1f5f9;
+}
+
+/* ===============================
+   SIDEBAR
+================================ */
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #1e3a8a, #0f172a);
+    color: white;
+    padding: 30px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.sidebar h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+/* Sidebar links */
+.sidebar a {
+    display: block;
+    color: #e5e7eb;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.sidebar a.active {
+    background: #2563eb;
+    color: white;
+    font-weight: 600;
+}
+
+/* Logout button */
+.sidebar a.logout {
+    margin-top: 30px;
+    background: #dc2626;
+    color: white;
+    text-align: center;
+}
+
+.sidebar a.logout:hover {
+    background: #b91c1c;
+}
+
+/* ===============================
+   MAIN CONTENT
+================================ */
+.content {
+    margin-left: 260px;
+    padding: 40px 50px;
+    width: calc(100% - 260px);
+}
+
+.content h1 {
+    font-size: 36px;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+.content p {
+    font-size: 16px;
+    color: #475569;
+    margin-bottom: 30px;
+}
+
+/* ===============================
+   DASHBOARD CARDS
+================================ */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.card-link {
+    text-decoration: none;
+}
+
+.card {
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e3a8a;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    background: #1e3a8a;
+    color: white;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 900px) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .content {
+        margin-left: 220px;
+        padding: 30px;
+    }
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+}
+
+/* ===============================
+   GLOBAL RESET
+================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+/* ===============================
+   LAYOUT
+================================ */
+body {
+    display: flex;
+    background: #f4f6fb;
+    min-height: 100vh;
+}
+
+/* ===============================
+   SIDEBAR
+================================ */
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #1e3a8a, #0f172a);
+    color: white;
+    padding: 30px 20px;
+    position: fixed;
+    height: 100vh;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 22px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    color: #e5e7eb;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar a.active {
+    background: #2563eb;
+    color: white;
+    font-weight: 600;
+}
+
+.sidebar .logout {
+    margin-top: 30px;
+    background: #dc2626;
+    text-align: center;
+    color: white;
+}
+
+/* ===============================
+   CONTENT AREA
+================================ */
+.content {
+    margin-left: 260px;
+    padding: 40px;
+    width: 100%;
+}
+
+.content h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #1e293b;
+}
+
+/* ===============================
+   FORM STYLING
+================================ */
+form {
+    background: white;
+    padding: 30px;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Inputs */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 15px;
+}
+
+form input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+/* Subjects */
+form label {
+    font-size: 15px;
+    color: #334155;
+}
+
+form input[type="checkbox"] {
+    margin-right: 6px;
+    accent-color: #2563eb;
+}
+
+/* Button */
+form button {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+form button:hover {
+    background: #1d4ed8;
+}
+
+/* Message */
+#msg {
+    margin-top: 12px;
+    font-weight: 600;
+    color: green;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+   .sidebar a {
+    display: block;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    border-radius: 8px;
+}
+
+
+    .content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    form {
+        width: 100%;
+    }
+}
+/* ===============================
+   GLOBAL
+================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+    display: flex;
+    background: #f4f6fb;
+    min-height: 100vh;
+}
+
+/* ===============================
+   SIDEBAR
+================================ */
+.sidebar {
+    width: 240px;
+    background: linear-gradient(180deg, #1e3a8a, #0f172a);
+    color: white;
+    padding: 30px 20px;
+    height: 100vh;
+    position: fixed;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 22px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    color: #e5e7eb;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar .logout {
+    background: #dc2626;
+    text-align: center;
+    color: white;
+}
+
+/* ===============================
+   CONTENT
+================================ */
+.content {
+    margin-left: 240px;
+    padding: 40px;
+    width: 100%;
+}
+
+.content h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #1e293b;
+}
+
+/* ===============================
+   TABLE STYLING
+================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+table td {
+    padding: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+    color: #000;   /* BLACK text */
+}
+
+table th {
+    background: #2563eb;
+    color: white;
+    padding: 14px;
+    text-align: left;
+}
+
+table tr:hover {
+    background: #f1f5f9;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+}
+/* ===============================
+   CONTENT FIX
+================================ */
+.content {
+    margin-left: 240px;
+    padding: 30px 40px;   /* reduced top padding */
+    width: calc(100% - 240px);
+    background: #f4f6fb;
+}
+
+/* Remove unwanted top gap */
+.content h1 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+/* Subheading */
+.content p {
+    margin-bottom: 20px;
+    color: #555;
+}
+table button {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+table button:hover {
+    background: #b91c1c;
+}
+.edit-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 6px;
+}
+
+.edit-btn:hover {
+    background: #1d4ed8;
+}
+
+.delete-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #b91c1c;
+}
+form {
+    background: white;
+    padding: 30px;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+form label {
+    display: block;
+    margin-top: 14px;
+    font-weight: 600;
+    color: #111;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.checkbox-group {
+    margin-top: 8px;
+}
+
+.checkbox-group label {
+    display: block;
+    font-weight: normal;
+}
+
+form button {
+    margin-top: 20px;
+    background: #2563eb;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background: #1d4ed8;
+}
+
+#msg {
+    margin-top: 10px;
+    font-weight: 600;
+    color: green;
+}
+/* =========================
+   ADMIN SIDEBAR
+========================= */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #0f172a;
+    padding: 25px 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+/* Title */
+.sidebar h2 {
+    color: white;
+    margin-bottom: 30px;
+    font-size: 22px;
+    text-align: center;
+}
+
+/* Links */
+.sidebar a {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #e5e7eb;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+/* Hover */
+.sidebar a:hover {
+    background: #1e293b;
+}
+
+/* Back button */
+.back-btn {
+    background: #1e40af;
+    color: white;
+}
+
+/* Logout */
+.logout {
+    background: #dc2626;
+    color: white;
+    margin-top: 40px;
+}
+
+/* Active (optional) */
+.sidebar a.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* ============================= */
+/* ✅ ANNOUNCEMENT BOX UI STYLE   */
+/* ============================= */
+
+/* ✅ Main White Box Like Attendance */
+.box-card {
+    width: 70%;
+    margin: 30px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0px 0px 14px rgba(0,0,0,0.12);
+}
+
+/* ✅ Inputs Same Rounded Style */
+.box-card input,
+.box-card textarea,
+.box-card select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid #cfcfcf;
+    font-size: 15px;
+    outline: none;
+}
+
+/* ✅ Focus Effect */
+.box-card input:focus,
+.box-card textarea:focus,
+.box-card select:focus {
+    border-color: #2563eb;
+    box-shadow: 0px 0px 6px rgba(37,99,235,0.4);
+}
+
+/* ✅ Button Like Attendance Submit */
+.btn-primary {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background: #1746b3;
+}
+
+/* ✅ Announcement Individual Card */
+.announcement-box {
+    background: #f8fafc;
+    padding: 18px;
+    margin: 18px 0;
+    border-radius: 14px;
+    border-left: 6px solid #2563eb;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.08);
+}
+
+/* ✅ Announcement Title */
+.announcement-box h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #111;
+}
+
+/* ✅ Delete Button */
+.btn-delete {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 14px;
+    background: red;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-delete:hover {
+    background: darkred;
+}
+
+/* ✅ Mobile Responsive */
+@media(max-width:768px) {
+    .box-card {
+        width: 95%;
+    }
+}
+
+body {
+    margin: 0;
+    font-family: "Poppins", Arial, sans-serif;
+    background: #f5f7fb;
+}
+
+/* ✅ Sidebar */
+.sidebar {
+    width: 230px;
+    height: 100vh;
+    position: fixed;
+    background: #1e293b;
+    padding-top: 15px;
+    color: white;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.sidebar a,
+.dropdown-btn {
+    display: block;
+    padding: 10px 18px;
+    color: white;
+    font-size: 14px;
+    text-decoration: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.sidebar a:hover,
+.dropdown-btn:hover {
+    background: #334155;
+    border-radius: 8px;
+}
+
+.dropdown-container {
+    display: none;
+    padding-left: 20px;
+}
+
+.dropdown-container a {
+    font-size: 13px;
+    color: #cbd5e1;
+    padding: 7px;
+}
+
+/* ✅ Main Area */
+.main {
+    margin-left: 230px;
+    padding: 20px 30px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+p {
+    margin-top: 0;
+    font-size: 14px;
+}
+
+/* ✅ Stat Cards */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 15px;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+}
+
+.stat-card p {
+    font-size: 13px;
+    color: gray;
+}
+
+.stat-card h2 {
+    font-size: 22px;
+    margin: 8px 0;
+    color: #2563eb;
+    font-weight: bold;
+}
+
+/* ✅ Grid Layout */
+.grid-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+/* ✅ Box Card */
+.box {
+    background: white;
+    padding: 18px;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.box h2 {
+    font-size: 17px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* ✅ Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+table th {
+    background: #2563eb;
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+table td {
+    padding: 9px;
+    border-bottom: 1px solid #eee;
+}
+
+table tr:hover {
+    background: #f1f5ff;
+}
+
+/* ✅ Donut Chart Container */
+.chart-box {
+    text-align: left;   /* ✅ better alignment */
+}
+
+/* ✅ FIX: Let chart fill the wrapper */
+.chart-box canvas {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+
+
+/* ✅ Legend */
+.legend {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.legend span {
+    display: block;
+    margin: 5px 0;
+}
+.btn-link {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #2563eb;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.btn-link:hover {
+    background: #1e40af;
+}
+
+.notes-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.note-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.note-btn {
+    background: #16a34a;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.note-btn:hover {
+    background: #15803d;
+}
+/* =========================================
+   GLOBAL RESET & FONTS
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+    display: flex;
+    background: #f4f6fb;
+    min-height: 100vh;
+}
+
+/* =========================================
+   SIDEBAR (Universal)
+   ========================================= */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1e293b; /* Dark Navy */
+    padding: 25px 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    color: white;
+    z-index: 1000;
+}
+
+.sidebar h2 {
+    color: white;
+    margin-bottom: 30px;
+    font-size: 22px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.sidebar a, .dropdown-btn {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #e5e7eb;
+    font-size: 14px;
+    transition: 0.3s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sidebar a:hover, .dropdown-btn:hover {
+    background: #334155;
+    color: white;
+}
+
+.sidebar a.active {
+    background: #2563eb;
+    color: white;
+}
+
+.sidebar .logout {
+    background: #dc2626 !important;
+    color: white !important;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.dropdown-container {
+    display: none;
+    padding-left: 15px;
+    background: #161e2e;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* =========================================
+   MAIN CONTENT AREA
+   ========================================= */
+.content, .main {
+    margin-left: 240px;
+    padding: 40px;
+    width: calc(100% - 240px);
+}
+
+.content h1 {
+    font-size: 28px;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+/* =========================================
+   ✅ MODERN FORM STYLING (Add Student)
+   ========================================= */
+#studentForm {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    max-width: 900px; /* Wider for two-column layout */
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 20px;
+}
+
+/* Make Heading and Full-width elements span both columns */
+#studentForm h3, 
+#studentForm .full-width, 
+#studentForm .button-group,
+#studentForm #msg {
+    grid-column: span 2;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 8px;
+}
+
+/* Inputs & Selects */
+#studentForm input, 
+#studentForm select, 
+#studentForm textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #fcfcfd;
+    transition: all 0.3s ease;
+}
+
+#studentForm input:focus, 
+#studentForm select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Subject Checkboxes UI */
+.subject-grid {
+    grid-column: span 2;
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px dashed #cbd5e1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.subject-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #334155;
+    cursor: pointer;
+}
+
+.subject-item input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    cursor: pointer;
+    accent-color: #2563eb;
+}
+
+/* Submit Button */
+#studentForm button {
+    grid-column: span 2;
+    background: #2563eb;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+#studentForm button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+#msg {
+    text-align: center;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+/* =========================================
+   TABLES & CARDS (Dashboard / View Pages)
+   ========================================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+table th {
+    background: #2563eb;
+    color: white;
+    padding: 15px;
+    text-align: left;
+}
+
+table td {
+    padding: 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+    #studentForm {
+        grid-template-columns: 1fr;
+    }
+    #studentForm h3, #studentForm .full-width, #studentForm button {
+        grid-column: span 1;
+    }
+    .sidebar { width: 100%; height: auto; position: relative; }
+    .content { margin-left: 0; width: 100%; padding: 20px; }
+}

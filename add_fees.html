@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Fees - Paathshala</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fees.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('fees_bp.manage_fees') }}">Manage Fees</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="content">
+    <h1>Student Fees Dashboard</h1>
+
+    <!-- ✅ ADD / UPDATE FEES FORM -->
+    <div class="fees-form">
+        <h3>Add / Update Student Fees</h3>
+
+        <input type="text" id="student_name" placeholder="Student Name">
+        <input type="text" id="student_class" placeholder="Class (7th / 8th / 9th)">
+        <input type="text" id="academic_year" placeholder="Academic Year (2024-25)">
+        <input type="number" id="total_fees" placeholder="Total Fees">
+        <input type="number" id="paid_fees" placeholder="Paid Fees">
+
+        <input type="number" id="pending_fees" placeholder="Pending Fees" readonly>
+
+        <button onclick="saveFees()">Save Fees</button>
+        <p id="msg"></p>
+    </div>
+
+    <!-- ✅ STUDENT FEES TABLE -->
+    <table id="feesTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Academic Year</th>
+                <th>Total Fees</th>
+                <th>Paid Fees</th>
+                <th>Pending Fees</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+/* 🔹 Auto-calculate pending fees */
+document.getElementById("paid_fees").addEventListener("input", calculatePending);
+document.getElementById("total_fees").addEventListener("input", calculatePending);
+
+function calculatePending() {
+    let total = parseInt(document.getElementById("total_fees").value) || 0;
+    let paid = parseInt(document.getElementById("paid_fees").value) || 0;
+    document.getElementById("pending_fees").value = total - paid;
+}
+
+/* 🔹 Save or update student fees */
+function saveFees() {
+    const data = {
+        name: document.getElementById("student_name").value,
+        student_class: document.getElementById("student_class").value,
+        academic_year: document.getElementById("academic_year").value,
+        total_fees: document.getElementById("total_fees").value,
+        paid_fees: document.getElementById("paid_fees").value
+    };
+
+    fetch("/fees/add-or-update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+        document.getElementById("msg").innerText = res.message;
+        loadFees();
+    });
+}
+
+/* 🔹 Load all students fees */
+function loadFees() {
+    fetch("/fees/status")
+    .then(res => res.json())
+    .then(data => {
+        const tbody = document.querySelector("#feesTable tbody");
+        tbody.innerHTML = "";
+
+        data.forEach(s => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${s.name}</td>
+                    <td>${s.class}</td>
+                    <td>${s.year}</td>
+                    <td>₹${s.total}</td>
+                    <td>₹${s.paid}</td>
+                    <td>₹${s.pending}</td>
+                    <td>${s.status}</td>
+                </tr>
+            `;
+        });
+    });
+}
+
+window.onload = loadFees;
+</script>
+
+</body>
+</html>

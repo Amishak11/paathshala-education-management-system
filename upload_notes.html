@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Notes - Paathshala</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty.css') }}">
+
+  <style>
+    /* ===============================
+       PAGE LAYOUT FIX (SIDEBAR + CONTENT)
+       =============================== */
+    :root{
+      --sidebar-w: 260px;          /* ✅ change if your sidebar width differs */
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --border: #e5e7eb;
+      --shadow: 0 12px 30px rgba(0,0,0,0.06);
+      --radius: 18px;
+    }
+
+    body{
+      background: var(--bg);
+      margin: 0;
+    }
+
+    /* ✅ Align content with sidebar */
+    .content{
+      margin-left: var(--sidebar-w);
+      padding: 30px 40px;
+      max-width: calc(100% - var(--sidebar-w));
+      box-sizing: border-box;
+    }
+
+    /* ===============================
+       TITLE
+       =============================== */
+    .page-title{
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .page-sub{
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    /* ===============================
+       FORM CARD
+       =============================== */
+    .form-card{
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid #eef2f7;
+      max-width: 560px;
+    }
+
+    .field{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    label{
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    input[type="text"],
+    select,
+    input[type="file"]{
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: #fff;
+      font-weight: 800;
+      transition: 0.2s;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    input[type="file"]:focus{
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
+    }
+
+    input[type="file"]{
+      padding: 10px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    /* ===============================
+       BUTTON
+       =============================== */
+    .btn{
+      width: 100%;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .btn:hover{
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    #msg{
+      margin-top: 12px;
+      font-weight: 800;
+      font-size: 13px;
+      color: #0f172a;
+      text-align: center;
+    }
+
+    @media (max-width: 900px){
+      :root{ --sidebar-w: 0px; }
+      .content{
+        margin-left: 0;
+        max-width: 100%;
+        padding: 18px;
+      }
+      .form-card{
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <aside class="sidebar">
+    {% if role == 'faculty' %}
+      <div class="brand">Paathshala</div>
+      <nav class="menu">
+        <a class="menu-item" href="/faculty/dashboard">🏠 Dashboard</a>
+        <a class="menu-item" href="/notes/faculty/view">📚 Notes List</a>
+        <a class="menu-item back-btn" href="/notes/faculty/view">⬅ Back</a>
+        <a class="menu-item" href="/logout">🚪 Logout</a>
+      </nav>
+    {% else %}
+      <h2>Admin Panel</h2>
+      <a href="{{ url_for('admin_bp.admin_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('notes_bp.admin_view_notes') }}">View Notes</a>
+      <a href="javascript:history.back()" class="back-btn">⬅ Back</a>
+      <a href="/logout" class="logout">Logout</a>
+    {% endif %}
+  </aside>
+
+  <div class="content">
+    <h1 class="page-title">📤 Upload Notes</h1>
+    <p class="page-sub">Upload class-wise notes with subject so students can view it easily.</p>
+
+    <div class="form-card">
+      <form id="noteForm" enctype="multipart/form-data">
+
+        <div class="field">
+          <label>Notes Title</label>
+          <input type="text" name="title" placeholder="Eg: Chapter 3 - Important Questions" required>
+        </div>
+
+        <div class="field">
+          <label>Select Class</label>
+          <select name="class_name" required>
+            <option value="">Select Class</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
+            <option value="9">Class 9</option>
+            <option value="10">Class 10</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Subject</label>
+          <select name="subject" required>
+            <option value="Maths">Maths</option>
+            <option value="Science">Science</option>
+            <option value="English">English</option>
+            <option value="SST">SST</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Marathi">Marathi</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Upload File</label>
+          <input type="file" name="file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required>
+        </div>
+
+        <button class="btn" type="submit">✅ Upload Notes</button>
+
+        <p id="msg"></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("noteForm").onsubmit = function(e){
+      e.preventDefault();
+      document.getElementById("msg").innerText = "Uploading...";
+
+      let formData = new FormData(this);
+
+      fetch("/notes/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("msg").innerText = data.message;
+        if(data.message.includes("successfully")) {
+            this.reset();
+        }
+      })
+      .catch(error => {
+        console.error("Upload Error:", error);
+        document.getElementById("msg").innerText = "Upload Failed ❌";
+      });
+    };
+  </script>
+
+</body>
+</html>

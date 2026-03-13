@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Announcement - Paathshala</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+<!-- ✅ Sidebar -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}">🏠 Dashboard</a>
+    <a href="{{ url_for('announcement_bp.view_announcements') }}">📄 View Announcements</a>
+    <a href="/logout" class="logout">🚪 Logout</a>
+</div>
+
+<!-- ✅ Main Content -->
+<div class="content">
+    <h1 style="text-align:center;">📢 Add Announcement</h1>
+
+    <!-- ✅ Announcement Form Box -->
+    <div class="box-card">
+
+        <form method="POST">
+
+            <label><b>Announcement Title</b></label>
+            <input type="text" name="title" placeholder="Enter title..." required>
+
+            <label><b>Description</b></label>
+            <textarea name="description" placeholder="Write announcement..."></textarea>
+
+            <label><b>Select Date</b></label>
+            <input type="date" name="event_date" required>
+
+            <label><b>Select Type</b></label>
+            <select name="type">
+                <option value="notice">Notice</option>
+                <option value="exam">Exam</option>
+                <option value="event">Event</option>
+                <option value="homework">Homework</option>
+            </select>
+
+            <button type="submit" class="btn-primary">
+                ✅ Save Announcement
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

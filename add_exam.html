@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Exam - Paathshala</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('exam_bp.add_exam_view') }}">Add exam </a>
+        
+    <a href="/logout" class="logout">Logout</a>
+</div>
+
+<div class="content">
+    <h1>Add Exam</h1>
+
+    <form id="examForm">
+        <input type="number" id="subject_id" placeholder="Subject ID" required>
+        <input type="date" id="exam_date" required>
+        <input type="text" id="description" placeholder="Exam Description" required>
+
+        <button type="button" onclick="addExam()">Add Exam</button>
+        <p id="msg"></p>
+    </form>
+</div>
+
+<script>
+function addExam() {
+
+    let subject_id = document.getElementById("subject_id").value;
+    let exam_date = document.getElementById("exam_date").value; // already YYYY-MM-DD
+    let description = document.getElementById("description").value;
+
+    let data = {
+        subject_id: parseInt(subject_id),
+        exam_date: exam_date,   // <-- DO NOT CONVERT. SEND AS IT IS.
+        description: description
+    };
+
+    fetch("http://localhost:5000/exam/add", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(result => {
+        document.getElementById("msg").innerText = result.message;
+        document.getElementById("msg").style.color = "green";
+
+        document.getElementById("examForm").reset();
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        document.getElementById("msg").innerText =
+            `Error: Submission failed or server error (${error.message})`;
+        document.getElementById("msg").style.color = "red";
+    });
+}
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Student - Paathshala</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+
+    <!-- Back button -->
+    <a href="javascript:history.back()">⬅ Back</a>
+
+    <!-- Dashboard -->
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}">🏠 Dashboard</a>
+
+    <!-- View Students -->
+    <a href="{{ url_for('student_bp.view_students') }}">👨‍🎓 View Students</a>
+
+    <!-- Logout -->
+    <a href="/logout" class="logout">🚪 Logout</a>
+</div>
+
+
+<div class="content">
+    <h1>Add New Student</h1>
+    <p>Fill in the details to register a student in the system.</p>
+
+    <form id="studentForm">
+        <div class="form-group">
+            <label>Student Name</label>
+            <input type="text" id="name" placeholder="Enter full name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Select Class</label>
+            <select id="class_name" required>
+                <option value="">-- Choose Class --</option>
+                <option value="7th">7th Grade</option>
+                <option value="8th">8th Grade</option>
+                <option value="9th">9th Grade</option>
+                <option value="10th">10th Grade</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>School Name</label>
+            <input type="text" id="school" placeholder="Current School" required>
+        </div>
+
+        <div class="form-group">
+            <label>Academic Year</label>
+            <input type="text" id="academic_year" placeholder="e.g. 2025-26" required>
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" id="phone" placeholder="Contact number" required>
+        </div>
+
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="email@example.com" required>
+        </div>
+
+        <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" id="dob" required>
+        </div>
+
+        <div class="form-group">
+            <label>Login Password</label>
+            <input type="password" id="password" placeholder="Set password" required>
+        </div>
+
+        <div class="form-group full-width">
+            <label>Home Address</label>
+            <input type="text" id="address" placeholder="Full residential address" required>
+        </div>
+
+        <div class="full-width" style="margin-top: 10px;">
+            <label><strong>Subjects Enrolled</strong></label>
+        </div>
+        
+        <div class="subject-grid">
+            <label class="subject-item"><input type="checkbox" name="subjects" value="Maths"> Maths</label>
+            <label class="subject-item"><input type="checkbox" name="subjects" value="Science"> Science</label>
+            <label class="subject-item"><input type="checkbox" name="subjects" value="English"> English</label>
+            <label class="subject-item"><input type="checkbox" name="subjects" value="Social Studies"> Social Studies</label>
+            <label class="subject-item"><input type="checkbox" name="subjects" value="Hindi"> Hindi</label>
+            <label class="subject-item"><input type="checkbox" name="subjects" value="Sanskrit"> Sanskrit</label>
+            <label class="subject-item"><input type="checkbox" name="subjects" value="Marathi"> Marathi</label>
+        </div>
+
+        <button type="button" onclick="addStudent()">🚀 Register Student</button>
+        <p id="msg"></p>
+    </form>
+</div>
+<script>
+function addStudent() {
+  const form = document.getElementById("studentForm");
+
+  // ✅ Trigger HTML required validation
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  // Collect selected subjects
+  const subjects = [];
+  document.querySelectorAll('input[name="subjects"]:checked')
+    .forEach(cb => subjects.push(cb.value));
+
+  const data = {
+    name: document.getElementById("name").value.trim(),
+    student_class: document.getElementById("class_name").value, // ✅ FIXED ID
+    school: document.getElementById("school").value.trim(),
+    academic_year: document.getElementById("academic_year").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    dob: document.getElementById("dob").value,
+    address: document.getElementById("address").value.trim(),
+    subjects: subjects,
+    password: document.getElementById("password").value
+  };
+
+  fetch("http://localhost:5000/student/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+  .then(async (r) => {
+    const res = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(res.message || "Server error");
+    return res;
+  })
+  .then(res => {
+    document.getElementById("msg").innerHTML = res.message || "Student registered ✅";
+    document.getElementById("msg").style.color = "green";
+    form.reset();
+  })
+  .catch(error => {
+    console.error("Submission Error:", error);
+    document.getElementById("msg").innerHTML =
+      "Error: " + error.message;
+    document.getElementById("msg").style.color = "red";
+  });
+}
+</script>
+</body>
+</html>

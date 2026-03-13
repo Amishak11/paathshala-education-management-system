@@ -1,0 +1,247 @@
+/* =========================
+   ABOUT PAGE (LIKE INDEX)
+========================= */
+
+:root{
+  --primary: #2563eb;         /* blue */
+  --primary-dark: #1d4ed8;
+  --text: #0f172a;
+  --muted: #64748b;
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --shadow: 0 12px 30px rgba(2, 6, 23, 0.10);
+}
+
+/* Page background similar to index */
+body{
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Announcement bar (if not already styled globally) */
+.announcement-bar{
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 0;
+  font-weight: 700;
+}
+
+/* =========================
+   NAVBAR (compact + centered)
+========================= */
+.navbar{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar{
+  padding: 12px 0;
+}
+
+.navbar .logo-container{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo{
+  width: 42px;         /* small like index */
+  height: 42px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.brand-text{
+  font-weight: 900;
+  letter-spacing: .2px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+/* Center navbar width like index */
+.navbar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-left: min(4vw, 24px);
+  padding-right: min(4vw, 24px);
+}
+
+/* Nav links */
+.nav-links{
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a{
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+  padding: 10px 12px;
+  border-radius: 12px;
+  transition: .25s ease;
+}
+
+.nav-links a:hover{
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary-dark);
+}
+
+.nav-links a.active{
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--primary-dark);
+}
+
+/* Login button */
+.nav-btn{
+  background: var(--primary);
+  color: #fff !important;
+  padding: 10px 14px !important;
+  border-radius: 14px;
+  box-shadow: 0 10px 18px rgba(37,99,235,0.18);
+}
+
+.nav-btn:hover{
+  background: var(--primary-dark);
+}
+
+/* =========================
+   ABOUT WRAP (overall compact)
+========================= */
+.about-wrap{
+  width: min(92%, 1100px);     /* like index compact */
+  margin: 28px auto 60px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+/* =========================
+   ABOUT BLOCK (image + card)
+========================= */
+.about-block{
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+/* reverse layout */
+.about-block.reverse{
+  grid-template-columns: 1fr 360px;
+}
+
+.about-block.reverse .about-photo{
+  order: 2;
+}
+
+.about-block.reverse .about-card{
+  order: 1;
+}
+
+/* Photo frame */
+.about-photo{
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+}
+
+.about-photo img{
+  width: 100%;
+  aspect-ratio: 4 / 5;          /* consistent portrait frame */
+  object-fit: cover;            /* clean fit */
+  border-radius: 18px;
+  display: block;
+}
+
+/* Card */
+.about-card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 22px 22px;
+  box-shadow: var(--shadow);
+}
+
+.about-card h2{
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+  font-weight: 900;
+}
+
+.about-card h3{
+  margin: 0 0 12px 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.about-card h3 span{
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.about-card p{
+  margin: 0 0 10px 0;
+  color: var(--muted);
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+/* =========================
+   Footer
+========================= */
+footer{
+  text-align: center;
+  padding: 18px 0;
+  color: #fff;
+  background: #0f172a;     /* dark like premium */
+  margin-top: 30px;
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 980px){
+  .about-block,
+  .about-block.reverse{
+    grid-template-columns: 1fr;
+  }
+
+  .about-block.reverse .about-photo,
+  .about-block.reverse .about-card{
+    order: initial;
+  }
+
+  .about-photo{
+    max-width: 380px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 720px){
+  .nav-links{
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .brand-text{
+    font-size: 16px;
+  }
+}

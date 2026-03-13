@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Lecture Slots</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty.css') }}">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+
+    <a href="{{ url_for('admin_bp.view_daily_schedules') }}">⬅ Back</a>
+    <a href="/logout" class="logout">Logout</a>
+</div>
+
+<div class="content">
+    <h1>
+        {{ schedule.faculty_name }} –
+        {{ schedule.day }}
+    </h1>
+
+    <p>
+        Working Time:
+        {{ schedule.day_start_time }} to {{ schedule.day_end_time }}
+    </p>
+
+    <form method="POST" class="form-box">
+        <select name="class_name" required>
+            <option value="">Select Class</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
+            <option value="9">Class 9</option>
+            <option value="10">Class 10</option>
+        </select>
+
+        <input type="text" name="subject"
+               placeholder="Subject" required>
+
+        <div class="time-row">
+            <input type="time" name="start_time" required>
+            <input type="time" name="end_time" required>
+        </div>
+
+        <button type="submit">Add Lecture</button>
+    </form>
+
+    <hr>
+
+    <h3>Existing Lectures</h3>
+
+    {% for slot in schedule.slots %}
+        <div class="card">
+            <p>
+                🕒 {{ slot.start_time }} – {{ slot.end_time }} <br>
+                Class {{ slot.class_name }} | {{ slot.subject }}
+            </p>
+        </div>
+    {% else %}
+        <p>No lectures added yet.</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>

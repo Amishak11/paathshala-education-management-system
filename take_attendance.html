@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Take Attendance</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty_take_attendance.css') }}">
+  <style>
+    .att-check { width: 20px; height: 20px; cursor: pointer; }
+    .status-head { text-align:center; width:120px; }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">Paathshala</div>
+    <nav class="menu">
+      <a class="menu-item" href="/faculty/dashboard">🏠 Dashboard</a>
+      <a class="menu-item" href="/faculty/timetable">🗓️ Timetable</a>
+      <a class="menu-item active" href="/faculty/attendance/history">✅ Attendance</a>
+      <a class="menu-item" href="/faculty/notes">📚 Notes</a>
+      <a class="menu-item" href="/logout">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <div class="topbar">
+      <div>
+        <h1>Take Attendance</h1>
+        <p class="subtext">Mark present/absent for students in this lecture</p>
+      </div>
+      <div class="today">
+        <span>{{ date.today().strftime("%A, %d %b %Y") }}</span>
+      </div>
+    </div>
+
+    <section class="panel">
+
+      <div class="info-bar">
+        <span class="chip good">Class: {{ class_name }}</span>
+        <span class="chip">Subject: {{ subject }}</span>
+        <span class="chip">Lecture: {{ lecture_no }}</span>
+        <span class="chip">Date: {{ date.today().strftime("%Y-%m-%d") }}</span>
+      </div>
+
+      <div style="display:flex; gap:12px; margin: 15px 0;">
+        <button type="button" class="save-btn" onclick="markAllPresent()">✅ Mark All Present</button>
+        <button type="button" class="back-btn" onclick="goBack()">← Back</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="att-table">
+          <thead>
+            <tr>
+              <th class="status-head">Present</th>
+              <th class="status-head">Absent</th>
+              <th>Student Name</th>
+              <th style="width:200px;">Phone</th>
+            </tr>
+          </thead>
+
+          <tbody id="studentBody">
+            {% for s in students %}
+            {% set st = existing_map.get(s.phone) %}
+            <tr>
+              <td style="text-align:center;">
+                <input class="att-check present-box"
+                       type="checkbox"
+                       data-key="{{ s.phone }}"
+                       data-name="{{ s.name }}"
+                       data-phone="{{ s.phone }}"
+                       {% if st == 'Present' %}checked{% endif %}
+                       onchange="toggleExclusive('{{ s.phone }}','present')">
+              </td>
+
+              <td style="text-align:center;">
+                <input class="att-check absent-box"
+                       type="checkbox"
+                       data-key="{{ s.phone }}"
+                       data-name="{{ s.name }}"
+                       data-phone="{{ s.phone }}"
+                       {% if st == 'Absent' %}checked{% endif %}
+                       onchange="toggleExclusive('{{ s.phone }}','absent')">
+              </td>
+
+              <td>{{ s.name }}</td>
+              <td>{{ s.phone }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions" style="margin-top:16px;">
+        <button type="button" class="save-btn" onclick="submitStudentAttendance()">💾 Save Attendance</button>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const CLASS_NAME = "{{ class_name }}";
+  const SUBJECT = "{{ subject }}";
+  const LECTURE_NO = "{{ lecture_no }}";
+
+  // ✅ India safe (server date)
+  const TODAY = "{{ date.today().isoformat() }}";
+
+  function toggleExclusive(key, type) {
+    const present = document.querySelector(`.present-box[data-key="${key}"]`);
+    const absent  = document.querySelector(`.absent-box[data-key="${key}"]`);
+
+    if (type === "present" && present.checked) absent.checked = false;
+    if (type === "absent" && absent.checked) present.checked = false;
+  }
+
+  function markAllPresent() {
+    const presentBoxes = document.querySelectorAll(".present-box");
+    const absentBoxes  = document.querySelectorAll(".absent-box");
+    presentBoxes.forEach(cb => cb.checked = true);
+    absentBoxes.forEach(cb => cb.checked = false);
+  }
+
+  function goBack() {
+    window.location.href = "/faculty/timetable";
+  }
+
+  function submitStudentAttendance() {
+    let records = [];
+
+    document.querySelectorAll(".present-box").forEach(presentCb => {
+      const key = presentCb.dataset.key;
+      const absentCb = document.querySelector(`.absent-box[data-key="${key}"]`);
+
+      let status = "Absent";
+      if (presentCb.checked) status = "Present";
+      else if (absentCb && absentCb.checked) status = "Absent";
+
+      records.push({
+        name: presentCb.dataset.name,
+        phone: presentCb.dataset.phone,
+        status: status
+      });
+    });
+
+    fetch("/attendance/mark", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        type: "student",
+        date: TODAY,
+        class_name: CLASS_NAME,
+        subject: SUBJECT,
+        lecture_no: LECTURE_NO,
+        section: "",
+        records: records
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert("✅ " + data.message);
+      window.location.href = "/faculty/attendance/history";
+    })
+    .catch(err => {
+      console.error(err);
+      alert("❌ Attendance Save Failed!");
+    });
+  }
+</script>
+
+</body>
+</html>

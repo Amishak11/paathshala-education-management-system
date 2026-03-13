@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Faculty Notes - Folders</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty_notes.css') }}">
+
+  <style>
+    /* Folder UI Styling */
+    .folder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .folder {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+
+    .folder:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+      background: #f0f7ff;
+    }
+
+    .folder-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .folder-name {
+      font-weight: 800;
+      color: #334155;
+    }
+
+    /* Hide notes by default */
+    .notes-container {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .active-folder {
+      border: 2px solid var(--primary) !important;
+      background: #eff6ff !important;
+    }
+
+    .back-to-folders {
+      display: none;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: var(--primary);
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">Paathshala</div>
+    <nav class="menu">
+      <a class="menu-item" href="/faculty/dashboard">🏠 Dashboard</a>
+      <a class="menu-item active" href="/notes/faculty/view">📚 Notes</a>
+      <a class="menu-item" href="/logout">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="view-title">Library Folders</h1>
+        <p class="subtext">Select a class to view notes</p>
+      </div>
+      <div class="right-actions">
+        <a class="btn primary" href="/notes/upload?role=faculty">➕ Upload Notes</a>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="back-to-folders" id="backBtn" onclick="showFolders()">⬅ Back to Folders</div>
+
+      {% if not notes %}
+        <div class="empty">No notes available.</div>
+      {% else %}
+        
+        <div class="folder-grid" id="folderGrid">
+          {% for class_name, group in notes|groupby('class_name') %}
+          <div class="folder" onclick="showClass('{{ class_name }}')">
+            <span class="folder-icon">📁</span>
+            <span class="folder-name">Class {{ class_name }}</span>
+            <div style="font-size: 11px; color: #64748b;">{{ group|length }} Files</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        {% for class_name, group in notes|groupby('class_name') %}
+        <div class="notes-container" id="class-{{ class_name }}">
+          <h2 style="margin-bottom: 15px;">Files for Class {{ class_name }}</h2>
+          <div class="table-wrap">
+            <table class="notes-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Subject</th>
+                  <th>File</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for n in group %}
+                <tr>
+                  <td class="bold">{{ n.title }}</td>
+                  <td>{{ n.subject }}</td>
+                  <td><span class="file-pill">{{ n.filetype|upper }}</span></td>
+                  <td>
+                    <a class="open-btn" href="/notes/file/{{ n.class_name }}/{{ n.filename }}" target="_blank">Open</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endfor %}
+
+      {% endif %}
+    </section>
+  </main>
+</div>
+
+<script>
+  function showClass(className) {
+    // Hide folder grid
+    document.getElementById('folderGrid').style.display = 'none';
+    
+    // Hide all notes containers first
+    const containers = document.querySelectorAll('.notes-container');
+    containers.forEach(c => c.style.display = 'none');
+
+    // Show selected container
+    document.getElementById('class-' + className).style.display = 'block';
+    
+    // Show back button
+    document.getElementById('backBtn').style.display = 'block';
+    document.getElementById('view-title').innerText = 'Class ' + className + ' Notes';
+  }
+
+  function showFolders() {
+    // Show folder grid
+    document.getElementById('folderGrid').style.display = 'grid';
+    
+    // Hide all notes containers
+    const containers = document.querySelectorAll('.notes-container');
+    containers.forEach(c => c.style.display = 'none');
+
+    // Hide back button
+    document.getElementById('backBtn').style.display = 'none';
+    document.getElementById('view-title').innerText = 'Library Folders';
+  }
+</script>
+
+</body>
+</html>

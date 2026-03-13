@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Notes | Paathshala</title>
+
+  <!-- Use your existing student dashboard CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/student_dashboard.css') }}">
+
+  <style>
+    /* Page layout */
+    .page-wrap{
+      padding: 22px;
+    }
+    .page-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .title{
+      font-size: 22px;
+      font-weight: 900;
+      color:#0f172a;
+      margin:0;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .subtitle{
+      margin:6px 0 0;
+      color:#64748b;
+      font-size: 13.5px;
+    }
+
+    /* Tools */
+    .tools{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .search{
+      position:relative;
+      min-width: 260px;
+      max-width: 360px;
+      width: 100%;
+    }
+    .search input{
+      width:100%;
+      padding: 11px 12px 11px 38px;
+      border:1px solid #e5e7eb;
+      border-radius: 12px;
+      outline:none;
+      background:#fff;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    .search input:focus{
+      border-color:#93c5fd;
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+    }
+    .search .icon{
+      position:absolute;
+      left:12px;
+      top:50%;
+      transform:translateY(-50%);
+      opacity:0.65;
+      font-size: 14px;
+    }
+    .pill{
+      padding: 9px 12px;
+      border-radius: 999px;
+      background:#eef2ff;
+      color:#3730a3;
+      border:1px solid #e0e7ff;
+      font-size: 13px;
+      font-weight: 800;
+      white-space:nowrap;
+    }
+
+    /* Notes grid */
+    .notes-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    @media(max-width: 1100px){
+      .notes-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media(max-width: 740px){
+      .notes-grid{ grid-template-columns: 1fr; }
+    }
+
+    .note-card{
+      background:#fff;
+      border:1px solid #eef2f7;
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 8px 22px rgba(15,23,42,0.05);
+      transition: 0.18s ease;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height: 140px;
+    }
+    .note-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(15,23,42,0.08);
+      border-color:#e2e8f0;
+    }
+
+    .note-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+
+    .note-title{
+      font-weight: 900;
+      color:#0f172a;
+      font-size: 15px;
+      line-height: 1.25;
+      margin:0;
+    }
+    .meta{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 6px;
+      color:#64748b;
+      font-size: 12px;
+    }
+    .tag{
+      background:#f1f5f9;
+      border:1px solid #e2e8f0;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-weight: 800;
+      color:#0f172a;
+      font-size: 11px;
+    }
+
+    .note-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-top:auto;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      text-decoration:none;
+      font-weight: 900;
+      font-size: 13px;
+      border:1px solid transparent;
+      cursor:pointer;
+      transition: 0.2s;
+      width: 100%;
+      text-align:center;
+      user-select:none;
+    }
+    .btn-view{
+      background:#2563eb;
+      color:#fff;
+    }
+    .btn-view:hover{
+      filter: brightness(0.95);
+    }
+    .btn-copy{
+      background:#f8fafc;
+      color:#0f172a;
+      border-color:#e2e8f0;
+    }
+    .btn-copy:hover{
+      background:#f1f5f9;
+    }
+
+    .empty-state{
+      margin-top: 18px;
+      background:#fff;
+      border:1px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 26px;
+      text-align:center;
+      color:#64748b;
+    }
+    .empty-state b{
+      color:#0f172a;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ✅ LEFT SIDEBAR (same style as your dashboard) -->
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <h2 class="brand">Paathshala</h2>
+    <p class="sub">Student Panel</p>
+  </div>
+
+  <nav class="menu">
+    <a href="/student/dashboard" class="menu-link"><span class="icon">🏠</span> Dashboard</a>
+    
+  
+  
+
+
+    <!-- ✅ Notes active -->
+    <a href="/notes/student/view" class="menu-link active"><span class="icon">📚</span> View Notes</a>
+
+    <a href="/student/profile" class="menu-link"><span class="icon">👤</span> Profile</a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <a href="/logout" class="logout-btn">🚪 Logout</a>
+  </div>
+</aside>
+
+<!-- ✅ MAIN -->
+<div class="main">
+
+  <div class="topbar">
+    <h3>Hi, {{ student.name }} 👋</h3>
+    <a href="/student/profile" class="menu-link">
+      <span class="icon">👤</span> Profile
+    </a>
+  </div>
+
+  <div class="page-wrap">
+
+    <div class="page-head">
+      <div>
+        <h1 class="title">📚 My Notes</h1>
+        <p class="subtitle">Showing notes for Class: <b>{{ student.student_class }}</b></p>
+      </div>
+
+      <div class="tools">
+        <span class="pill">Total: {{ notes|length if notes else 0 }}</span>
+
+        <div class="search">
+          <span class="icon">🔎</span>
+          <input id="searchBox" type="text" placeholder="Search notes by title...">
+        </div>
+      </div>
+    </div>
+
+    {% if notes and notes|length > 0 %}
+      <div class="notes-grid" id="notesGrid">
+
+        {% for n in notes %}
+          <div class="note-card" data-title="{{ (n.title or '')|lower }}">
+            <div class="note-top">
+              <div>
+                <p class="note-title">{{ n.title }}</p>
+                <div class="meta">
+                  <span class="tag">{{ (n.filetype or '')|upper }}</span>
+                  {% if n.created_at %}
+                    <span>📅 {{ n.created_at.strftime("%d %b %Y") }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="note-actions">
+              <a class="btn btn-view" target="_blank"
+                 href="/notes/file/{{ n.class_name }}/{{ n.filename }}">
+                👁️ View
+              </a>
+
+              <button class="btn btn-copy" type="button"
+                data-link="/notes/file/{{ n.class_name }}/{{ n.filename }}">
+                🔗 Copy Link
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p style="font-size:16px;margin:0 0 6px;"><b>No notes uploaded</b> for your class yet 🎉</p>
+        <p style="margin:0;">Ask your teacher/admin to upload notes for Class {{ student.student_class }}.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+  // Auto active highlight (if you use it elsewhere)
+  (function () {
+    const current = window.location.pathname.replace(/\/$/, "");
+    document.querySelectorAll(".menu-link").forEach(a => {
+      const href = (a.getAttribute("href") || "").replace(/\/$/, "");
+      if (href === current) a.classList.add("active");
+    });
+  })();
+
+  // Search filter
+  const searchBox = document.getElementById("searchBox");
+  const grid = document.getElementById("notesGrid");
+
+  if (searchBox && grid) {
+    searchBox.addEventListener("input", () => {
+      const q = searchBox.value.trim().toLowerCase();
+      grid.querySelectorAll(".note-card").forEach(card => {
+        const title = card.dataset.title || "";
+        card.style.display = title.includes(q) ? "" : "none";
+      });
+    });
+  }
+
+  // Copy link buttons
+  document.querySelectorAll(".btn-copy").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const link = location.origin + btn.dataset.link;
+      try {
+        await navigator.clipboard.writeText(link);
+        btn.textContent = "✅ Copied!";
+        setTimeout(() => btn.textContent = "🔗 Copy Link", 1200);
+      } catch (e) {
+        alert("Copy failed. Link: " + link);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

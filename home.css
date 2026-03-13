@@ -1,0 +1,800 @@
+/* =========================
+   HOME PAGE STYLES (FINAL)
+   Aesthetic Blue-Lavender UI
+========================= */
+
+/* ---------- THEME TOKENS ---------- */
+:root{
+  --max: 1200px;
+
+  /* cute + aesthetic palette */
+  --bg: #f6f7ff;              /* soft lavender tint */
+  --bg-2: #f2f8ff;            /* soft sky tint */
+  --card: rgba(255,255,255,0.62); /* glass */
+  --card-2: rgba(255,255,255,0.72);
+
+  --text: #0f172a;
+  --muted: #64748b;
+
+  --primary: #6366f1;         /* indigo */
+  --primary-dark: #4f46e5;    /* deeper indigo */
+  --blue: #60a5fa;            /* soft blue */
+  --pink: #fbcfe8;            /* pastel pink */
+  --mint: rgba(34,197,94,0.16);
+
+  --border: rgba(15, 23, 42, 0.10);
+  --radius: 24px;
+  --radius-sm: 18px;
+
+  --shadow-soft: 0 16px 45px rgba(15, 23, 42, 0.08);
+  --shadow: 0 22px 65px rgba(99, 102, 241, 0.18);
+}
+
+/* ---------- PAGE BACKGROUND (not white-white) ---------- */
+body{
+  background: linear-gradient(135deg, var(--bg), var(--bg-2));
+}
+
+/* glow blobs behind everything */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(135deg, var(--bg), var(--bg-2));
+}
+body::after{
+  content:"";
+  position: fixed;
+  inset: -220px;
+  z-index: -1;
+  background:
+    radial-gradient(520px 280px at 18% 18%, rgba(99,102,241,0.18), transparent 60%),
+    radial-gradient(560px 300px at 78% 22%, rgba(96,165,250,0.16), transparent 60%),
+    radial-gradient(700px 360px at 55% 82%, rgba(251,207,232,0.18), transparent 65%);
+  filter: blur(2px);
+}
+
+/* utility container spacing */
+section{
+  width: min(100%, var(--max));
+  margin: 0 auto;
+}
+
+/* =========================
+   HERO
+========================= */
+.hero{
+  margin-top: 26px;
+  padding: 26px 18px 10px;
+
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 26px;
+  align-items: center;
+}
+
+/* left card */
+.hero-left{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 30px;
+
+  backdrop-filter: blur(18px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle inner gradient */
+.hero-left::before{
+  content:"";
+  position:absolute;
+  inset:-40px;
+  background: radial-gradient(400px 220px at 25% 20%, rgba(99,102,241,0.14), transparent 60%);
+  z-index: 0;
+}
+.hero-left > *{ position: relative; z-index: 1; }
+
+.hero-left h1{
+  font-size: clamp(30px, 4.2vw, 52px);
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  color: var(--text);
+}
+
+.hero-left h1 span{
+  background: linear-gradient(90deg, var(--primary), var(--blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.hero-left p{
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.8;
+  max-width: 540px;
+}
+
+/* button */
+.hero-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 18px;
+  padding: 12px 18px;
+
+  background: linear-gradient(135deg, var(--primary), var(--blue));
+  color: #fff;
+  border-radius: 999px;
+
+  font-weight: 900;
+  letter-spacing: 0.2px;
+
+  box-shadow: 0 14px 35px rgba(99, 102, 241, 0.24);
+  transition: 0.25s ease;
+}
+.hero-btn:hover{
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 18px 45px rgba(99, 102, 241, 0.32);
+}
+
+/* right card */
+.hero-right{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 18px;
+
+  backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* circle frame */
+.hero-image-circle{
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.55),
+    rgba(224,242,254,0.55),
+    rgba(251,207,232,0.35)
+  );
+
+  border: 2px solid rgba(99,102,241,0.18);
+  box-shadow: var(--shadow);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.hero-image-circle img{
+  width: 78%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 18px rgba(15,23,42,0.10));
+}
+
+/* =========================
+   SECTION HEADINGS (common)
+========================= */
+.why-paathshala,
+.achievements,
+.events-section,
+.login-section,
+.contact-section{
+  padding: 36px 18px;
+}
+
+.why-paathshala h2,
+.achievements h2,
+.events-section h2,
+.login-section h2,
+.contact-section h2{
+  font-size: 30px;
+  font-weight: 950;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.why-subtext,
+.events-subtext{
+  color: var(--muted);
+  font-size: 15px;
+}
+
+/* =========================
+   WHY PAATHSHALA
+========================= */
+.why-points{
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+}
+
+.point{
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 14px;
+
+  box-shadow: 0 12px 28px rgba(15,23,42,0.06);
+  font-weight: 750;
+  color: #1f2937;
+
+  backdrop-filter: blur(14px);
+}
+
+/* =========================
+   ACHIEVEMENTS
+========================= */
+.achievement-cards{
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 16px;
+}
+
+.achievement-card{
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: 0.25s ease;
+  backdrop-filter: blur(14px);
+}
+.achievement-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 18px 55px rgba(99,102,241,0.14);
+}
+
+.achievement-card img{
+  width: 100%;
+  height: 175px;
+  object-fit: cover;
+}
+
+.achievement-card h3{
+  padding: 14px 14px 0;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.achievement-card p{
+  padding: 6px 14px 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* =========================
+   EVENTS
+========================= */
+.events-gallery{
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 14px;
+}
+
+.event-card{
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(15,23,42,0.06);
+  transition: 0.25s ease;
+  backdrop-filter: blur(14px);
+}
+.event-card:hover{
+  transform: translateY(-3px);
+}
+
+.event-card img{
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.event-card h3{
+  padding: 10px 12px 14px;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+/* =========================
+   LOGIN SECTION
+========================= */
+.login-cards{
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.login-card{
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(96,165,250,0.10), rgba(251,207,232,0.10));
+  border: 1px solid rgba(99,102,241,0.18);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-soft);
+  transition: 0.25s ease;
+  text-align: center;
+}
+.login-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 20px 55px rgba(99,102,241,0.18);
+}
+.login-card h3{
+  font-size: 18px;
+  font-weight: 950;
+}
+.login-card p{
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* =========================
+   CONTACT
+========================= */
+.contact-details{
+  margin-top: 14px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(14px);
+}
+.contact-details p{
+  margin: 10px 0;
+  color: #1f2937;
+}
+.contact-details strong{
+  color: var(--text);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 980px){
+  .hero{
+    grid-template-columns: 1fr;
+  }
+  .events-gallery{
+    grid-template-columns: repeat(2, minmax(0,1fr));
+  }
+  .achievement-cards{
+    grid-template-columns: 1fr;
+  }
+  .why-points{
+    grid-template-columns: 1fr;
+  }
+  .hero-image-circle{
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 520px){
+  .hero-left{ padding: 20px; }
+  .hero-left h1{ font-size: 34px; }
+}
+
+/* ===== HERO ONE FRAME ===== */
+.hero{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 90%;
+  max-width: 1200px;
+  margin: 40px auto;
+
+  padding: 40px;
+
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(18px);
+
+  border-radius: 30px;
+  border: 1px solid rgba(0,0,0,0.05);
+
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+}
+
+/* ===== TEXT ===== */
+.hero-text{
+  width: 55%;
+}
+
+.hero-text h1{
+  font-size: 48px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.hero-text span{
+  color: #6366f1;
+}
+
+.hero-text p{
+  margin-top: 15px;
+  color: #64748b;
+  font-size: 16px;
+  max-width: 500px;
+}
+
+/* BUTTON */
+.hero-btn{
+  display: inline-block;
+  margin-top: 20px;
+
+  padding: 12px 22px;
+  background: linear-gradient(135deg, #6366f1, #60a5fa);
+
+  color: white;
+  font-weight: 700;
+
+  border-radius: 25px;
+  text-decoration: none;
+
+  box-shadow: 0 10px 25px rgba(99,102,241,0.3);
+  transition: 0.3s;
+}
+
+.hero-btn:hover{
+  transform: translateY(-2px);
+}
+
+/* ===== IMAGE ===== */
+.hero-img{
+  width: 40%;
+  display: flex;
+  justify-content: center;
+}
+
+/* 🔥 IMAGE IN CIRCLE (NO EXTRA BORDER CIRCLE) */
+.hero-img img{
+  width: 280px;
+  height: 280px;
+
+  border-radius: 50%;     /* ✅ only image circle */
+  object-fit: cover;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.hero{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 85%;
+  max-width: 1100px;
+  margin: 25px auto;
+
+  padding: 28px 30px;   /* 🔽 reduced from 40 */
+
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(14px);
+
+  border-radius: 24px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+.hero-text h1{
+  font-size: 40px;   /* was too big */
+}
+
+.hero-text p{
+  font-size: 14.5px;
+}
+.hero-img img{
+  width: 220px;   /* 🔽 smaller */
+  height: 220px;
+}
+.why-points{
+  margin-top: 20px;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.point{
+  background: var(--card-2);
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+  padding: 12px 14px;
+
+  display: flex;              /* 🔥 aligns properly */
+  align-items: center;
+  gap: 10px;
+
+  font-size: 14.5px;
+  font-weight: 600;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+.point::before{
+  content: "✔";
+  color: #22c55e;
+  font-weight: bold;
+}
+/* SAME WIDTH AS HERO */
+.why-paathshala{
+  width: 100%;
+  max-width: 100%;
+  
+  margin: 0 auto;       /* center align */
+  padding: 20px 10px;   /* slight spacing */
+}
+.why-paathshala{
+  margin-top: 20px;
+}
+
+/* ensure inner content aligns */
+.why-paathshala,
+.why-points{
+  width: 100%;
+}
+/* FIX ALIGNMENT WITH HERO */
+.why-paathshala{
+  margin-top: 18px;
+  padding: 16px 6px;
+
+  width: 100%;
+}
+
+.why-points{
+  width: 100%;
+}
+.event-card{
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.achievement-card{
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+/* ===========================
+   GLOBAL IMAGE FIX (NO STRETCH)
+=========================== */
+img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ===========================
+   HERO IMAGE (RIGHT SIDE)
+=========================== */
+.hero-img{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-img img{
+  width: min(420px, 90%);
+  height: auto;
+  object-fit: contain;   /* keep full person visible */
+  filter: drop-shadow(0 18px 28px rgba(0,0,0,0.18));
+}
+
+/* ===========================
+   ACHIEVEMENT CARDS (3 CARDS)
+=========================== */
+.achievement-card{
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.achievement-card img{
+  width: 100%;
+  height: 190px;         /* fixed frame height */
+  object-fit: cover;     /* fills box nicely */
+  object-position: center;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Optional: nice zoom on hover */
+.achievement-card img{
+  transition: transform 0.35s ease;
+}
+.achievement-card:hover img{
+  transform: scale(1.05);
+}
+
+/* ===========================
+   EVENTS GALLERY (EVENT CARDS)
+=========================== */
+.event-card{
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.event-card img{
+  width: 100%;
+  height: 200px;         /* uniform frame */
+  object-fit: cover;
+  object-position: center;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Optional: clean shadow + hover */
+.event-card{
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.event-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.12);
+}
+/* ===========================
+   GLOBAL IMAGE FIX
+=========================== */
+img{
+  width: 100%;
+  display: block;
+}
+
+/* ===========================
+   HERO IMAGE (NO CUT)
+=========================== */
+.hero-img{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-img img{
+  width: min(420px, 90%);
+  height: auto;
+  object-fit: contain;  /* 👈 FULL IMAGE VISIBLE */
+}
+
+/* ===========================
+   COMMON CARD IMAGE FRAME (16:9)
+=========================== */
+.img-frame{
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* 👈 SAME SIZE FOR ALL */
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+/* Image inside frame */
+.img-frame img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* 👈 FILLS NICELY */
+  object-position: center;
+  transition: transform 0.4s ease;
+}
+
+/* Hover zoom */
+.img-frame:hover img{
+  transform: scale(1.05);
+}
+
+/* ===========================
+   ACHIEVEMENT CARDS
+=========================== */
+.achievement-card{
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.achievement-card:hover{
+  transform: translateY(-5px);
+}
+
+/* ===========================
+   EVENT CARDS
+=========================== */
+.event-card{
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.event-card:hover{
+  transform: translateY(-5px);
+}
+/* ===========================
+   DESKTOP SIZE CONTROL
+=========================== */
+@media (min-width: 1024px){
+
+  /* Reduce overall section width */
+  .achievement-cards,
+  .events-gallery{
+    max-width: 1100px;   /* 👈 reduces stretch */
+    margin: auto;
+    gap: 18px;
+  }
+
+  /* Make cards smaller */
+  .achievement-card,
+  .event-card{
+    max-width: 300px;   /* 👈 smaller cards */
+    margin: auto;
+  }
+
+  /* Reduce image frame height */
+  .img-frame{
+    aspect-ratio: 16 / 9;
+    max-height: 160px;  /* 👈 smaller image */
+  }
+
+  /* Reduce text size slightly */
+  .achievement-card h3,
+  .event-card h3{
+    font-size: 16px;
+  }
+
+  .achievement-card p{
+    font-size: 13px;
+  }
+}
+.achievement-cards,
+.events-gallery{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  justify-items: center;
+}
+/* ===========================
+   GLOBAL CONTAINER (DESKTOP FIX)
+=========================== */
+.container{
+  width: 90%;
+  max-width: 1100px;   /* 👈 controls overall width */
+  margin: auto;
+}
+
+/* Apply spacing */
+.section{
+  padding: 40px 0;
+}
+.navbar{
+  padding: 12px 5%;
+}
+
+@media (min-width: 1024px){
+  .navbar{
+    padding: 12px 8%;
+  }
+}
+.hero{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+/* Prevent too wide stretching */
+.hero-text{
+  max-width: 500px;
+}

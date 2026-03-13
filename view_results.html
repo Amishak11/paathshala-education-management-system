@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Student Results</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+  <style>
+    .top-actions{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .class-buttons{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content:center;
+      margin-bottom: 18px;
+    }
+    .class-buttons a button{
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid #cbd5e1;
+      cursor:pointer;
+      font-weight:900;
+      background:#fff;
+    }
+    .class-buttons a button:hover{
+      border-color:#2563eb;
+      color:#2563eb;
+    }
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:12px;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+    .pill-abs{ background:#fff7ed; color:#c2410c; border-color:#fed7aa; }
+    .pill-pass{ background:#ecfdf5; color:#047857; border-color:#bbf7d0; }
+    .pill-fail{ background:#fef2f2; color:#b91c1c; border-color:#fecaca; }
+    .chip{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eff6ff;
+      color:#1d4ed8;
+      border:1px solid #bfdbfe;
+      font-weight:900;
+      font-size:12px;
+    }
+    table{
+      border-collapse: collapse;
+    }
+    th{
+      background:#f8fafc;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      color:#64748b;
+    }
+    td, th{
+      border:1px solid #e2e8f0;
+      padding:10px;
+      text-align:left;
+      vertical-align:top;
+    }
+    .actions a{
+      text-decoration:none;
+      font-weight:900;
+      color:#2563eb;
+    }
+    .actions a.delete{
+      color:#b91c1c;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ✅ Sidebar -->
+<div class="sidebar">
+  <h2>Admin Panel</h2>
+  <a href="{{ url_for('admin_bp.admin_dashboard') }}">🏠 Dashboard</a>
+
+  <!-- ✅ use your correct add route -->
+  <a href="{{ url_for('admin_bp.add_result') }}">➕ Add Result</a>
+
+  <a href="/logout" class="logout">🚪 Logout</a>
+</div>
+
+<!-- ✅ Content -->
+<div class="content">
+  <h1 style="text-align:center;">📄 Student Results</h1>
+
+  <!-- ✅ CLASS FOLDER BUTTONS -->
+  <div class="class-buttons">
+    <a href="/results/view/7th"><button type="button">📁 Class 7th</button></a>
+    <a href="/results/view/8th"><button type="button">📁 Class 8th</button></a>
+    <a href="/results/view/9th"><button type="button">📁 Class 9th</button></a>
+    <a href="/results/view/10th"><button type="button">📁 Class 10th</button></a>
+    <a href="/results/view"><button type="button">📁 All</button></a>
+  </div>
+
+  <div class="box-card">
+
+    {% if selected_class %}
+      <h3 style="margin:0 0 12px;">Showing: <b>{{ selected_class }}</b></h3>
+    {% else %}
+      <h3 style="margin:0 0 12px;">Showing: <b>All Classes</b></h3>
+    {% endif %}
+
+    {% if results and results|length > 0 %}
+      <table width="100%" cellpadding="10">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Class</th>
+            <th>Subject</th>
+            <th>Obtained</th>
+            <th>Total</th>
+            <th>%</th>
+            <th>Exam Date</th>
+            <th>Remark</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for r in results %}
+          <tr>
+            <td>{{ r.student_name }}</td>
+            <td>{{ r.class_name }}</td>
+
+            <td><b>{{ r.subject }}</b></td>
+
+            <td>
+              {% if r.obtained_marks == -1 %}
+                <span class="pill pill-abs">ABSENT</span>
+              {% else %}
+                <span class="chip">{{ r.obtained_marks }}</span>
+              {% endif %}
+            </td>
+
+            <td>{{ r.total_marks if r.total_marks else "N/A" }}</td>
+
+            <td>
+              {% if r.obtained_marks != -1 and r.total_marks and r.total_marks > 0 %}
+                {{ ((r.obtained_marks / r.total_marks) * 100) | round(2) }}%
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+
+            <td>{{ r.exam_date if r.exam_date else "N/A" }}</td>
+
+            <td>
+              {% if r.obtained_marks == -1 %}
+                <span class="pill pill-abs">Absent</span>
+              {% elif r.obtained_marks < 35 %}
+                <span class="pill pill-fail">Fail</span>
+              {% else %}
+                <span class="pill pill-pass">Pass</span>
+              {% endif %}
+            </td>
+
+            <td class="actions">
+              <a href="/results/edit/{{ r.id }}">✏ Edit</a> |
+              <a class="delete" href="/results/delete/{{ r.id }}"
+                 onclick="return confirm('Delete this result?')">❌ Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div style="padding:18px; text-align:center; color:#64748b; font-weight:900;">
+        No results found.
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+</body>
+</html>

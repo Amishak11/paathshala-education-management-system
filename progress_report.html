@@ -1,0 +1,39 @@
+<div class="content">
+    <h1>📈 Class {{ class_name }} Progress Analysis</h1>
+    <p>This report identifies subjects where students are struggling.</p>
+
+    <div class="box-card">
+        <table width="100%" border="1" style="border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: #1e293b; color: white;">
+                    <th style="padding: 10px;">Subject</th>
+                    <th style="padding: 10px;">Average Score</th>
+                    <th style="padding: 10px;">Total Tests</th>
+                    <th style="padding: 10px;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in report %}
+                <tr>
+                    <td style="padding: 10px;">{{ row.subject }}</td>
+                    <td style="padding: 10px;">{{ row.average }}</td>
+                    <td style="padding: 10px;">{{ row.count }}</td>
+                    <td style="padding: 10px;">
+                        {% if row.status == 'Critical' %}
+                            <b style="color: red;">⚠️ Low Performance</b>
+                        {% elif row.status == 'Good' %}
+                            <b style="color: green;">✅ Excellent</b>
+                        {% else %}
+                            <b style="color: orange;">🟡 Stable</b>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <a href="/results/view" class="btn">Back to Folders</a>
+    </div>
+</div>
